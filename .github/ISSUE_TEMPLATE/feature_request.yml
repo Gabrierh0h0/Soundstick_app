@@ -1,0 +1,14 @@
+name: Proponer una mejora
+description: Una idea para Soundstick
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: ¿Qué te gustaría poder hacer?
+    validations:
+      required: true
+  - type: textarea
+    id: por-que
+    attributes:
+      label: ¿Para qué lo usarías?

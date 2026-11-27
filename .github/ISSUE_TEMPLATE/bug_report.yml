@@ -1,0 +1,41 @@
+name: Reportar un problema
+description: Algo no funciona como debería
+labels: [bug]
+body:
+  - type: textarea
+    id: que
+    attributes:
+      label: ¿Qué pasó?
+      description: Describe qué hacías y qué esperabas que ocurriera.
+    validations:
+      required: true
+  - type: dropdown
+    id: modo
+    attributes:
+      label: Modo
+      options: [Video, Video + audio, Imagen + audio, Voz, No aplica]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión de Soundstick
+      description: Aparece al final de la sección Ayuda.
+      placeholder: "1.0.2"
+    validations:
+      required: true
+  - type: input
+    id: telefono
+    attributes:
+      label: Teléfono y versión de Android
+      placeholder: "Xiaomi Redmi Note 12, Android 14"
+  - type: textarea
+    id: clip
+    attributes:
+      label: Datos del clip
+      description: Duración, resolución aproximada y de dónde lo elegiste (galería, Descargas, Google Fotos...). No adjuntes archivos privados.
+  - type: textarea
+    id: captura
+    attributes:
+      label: Captura o mensaje de error
+      description: Pega el texto exacto del error o arrastra una captura. Cuida no mostrar tu número ni chats.
