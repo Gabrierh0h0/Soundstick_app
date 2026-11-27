@@ -50,8 +50,8 @@ button:disabled { cursor: not-allowed; }
 
 .banner { height: 84px; position: relative; overflow: hidden; background: linear-gradient(90deg, #7fe3ee 0%, #fff 40%, #ff9ad8 75%, #b04dd8 100%); border-bottom: 2px solid var(--edge); }
 .logo {
-  position: absolute; left: 0; right: 0; top: -6px; margin: 0; white-space: nowrap; text-align: center; user-select: none;
-  font: italic 400 min(72px, 16.4vw)/1 'Archivo Black', 'Arial Black', Impact, sans-serif; letter-spacing: -3px; padding-right: 6px; color: transparent;
+  position: absolute; left: 50%; transform: translateX(-50%); top: -4px; margin: 0; white-space: nowrap; text-align: center; user-select: none;
+  font: italic 400 min(76px, 17.2vw)/1 'Archivo Black', 'Arial Black', Impact, sans-serif; letter-spacing: -3px; padding-right: 6px; color: transparent;
   background: linear-gradient(180deg, #fff 0%, #ffd0f0 35%, #e03ac8 55%, #5a1aa0 100%); -webkit-background-clip: text; background-clip: text;
   -webkit-text-stroke: 2px #3b0f6b; filter: drop-shadow(4px 4px 0 rgb(59 15 107 / 0.55));
 }
@@ -278,3 +278,33 @@ button:disabled { cursor: not-allowed; }
 .pips { display: flex; gap: 3px; padding: 0 !important; border: 0 !important; }
 .pips i { flex: 1; height: 12px; border: 2px solid; border-color: var(--edge) #fff #fff var(--edge); background: #fff; }
 .pips i.l { background: linear-gradient(180deg, #d6ff6a, #7ab000); }
+
+/* ── Asistente de 3 pasos ── */
+.stepbar { list-style: none; margin: 0 0 6px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.stepbar li { display: grid; gap: 3px; font: 700 12px/1 var(--f-ui); text-transform: uppercase; color: #6e6490; }
+.stepbar li i { height: 6px; background: var(--lil); border: 1px solid var(--edge); }
+.stepbar li.d { color: var(--ink); }
+.stepbar li.d i { background: linear-gradient(180deg, #ff7ad9, var(--pk)); }
+.step-title { margin: 0 0 8px; font: 400 22px/1.1 var(--f-term); text-transform: uppercase; color: var(--pu); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { min-height: 44px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; font: 700 13px/1 var(--f-ui); text-transform: uppercase; color: var(--ink); background: var(--lil); border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; box-shadow: inset -1px -1px 0 #8a79b8; }
+.chip em { font: 18px/1 var(--f-term); font-style: normal; text-transform: none; color: #6e6490; }
+.chip.set em { color: #c2185b; }
+.chip[aria-pressed='true'] { background: var(--yel); border-color: var(--edge) #fff #fff var(--edge); box-shadow: none; }
+.chip:disabled { color: #6e6490; }
+.chip.help { min-width: 44px; justify-content: center; padding: 0; color: var(--red); }
+.tool-chips + .tool-panel { margin-top: 8px; }
+.tools { margin-top: 0; border: 0; }
+.card { margin-top: 8px; padding: 10px; display: grid; gap: 6px; background: var(--lil-2); border: 2px solid; border-color: var(--edge) #fff #fff var(--edge); }
+.kv { display: flex; justify-content: space-between; gap: 12px; font: 16px/1.2 var(--f-mono); color: var(--ink); }
+.kv b { font-weight: 400; color: #6e6490; text-transform: uppercase; }
+.kv span { text-align: right; overflow-wrap: anywhere; }
+.card .save { justify-content: center; margin-top: 4px; }
+
+.dock { position: sticky; bottom: 0; z-index: 5; margin: 12px -10px 0; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: 1fr 1.6fr; gap: 8px; background: var(--lil); border-top: 2px solid var(--edge); box-shadow: 0 -1px 0 #fff; }
+.dock button { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 52px; font: 900 13px/1.2 var(--f-btn); text-transform: uppercase; letter-spacing: 0.5px; color: #000; background: var(--lil-2); border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; box-shadow: inset -1px -1px 0 #8a79b8; }
+.dock .pri { background: linear-gradient(180deg, #ff9ae6, var(--pk)); color: #fff; text-shadow: 1px 1px 0 #3b0f6b; }
+.dock .pri.ready { background: var(--yel); color: #000; text-shadow: none; }
+.dock button:disabled { color: #6e6490; text-shadow: 1px 1px 0 #fff; background: var(--lil-2); }
+.dock button:not(:disabled):active { border-color: var(--edge) #fff #fff var(--edge); }

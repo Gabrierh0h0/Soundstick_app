@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useT, type Key } from '../lib/i18n'
 import { LIMITS } from '../lib/limits'
-import { BG_COLORS, SHAPES, TEXT_COLORS, type Effects, type TextPos } from '../lib/project'
+import { BG_COLORS, TEXT_COLORS, type Effects, type TextPos } from '../lib/project'
 import { fmt } from '../lib/trim'
-import { Planet } from './Icons'
 
 type ToolId = 'vol' | 'speed' | 'fade' | 'text' | 'format'
 
@@ -53,7 +52,7 @@ export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLe
     { id: 'vol', label: 'toolVolume', value: showOrig && showAdded ? `${Math.round(fx.volOrig * 100)}/${Math.round(fx.volAdd * 100)}` : pct(showOrig ? fx.volOrig : fx.volAdd), on: false },
     { id: 'speed', label: 'toolSpeed', value: `${fx.speed}x`, on: fx.speed !== 1 },
     { id: 'fade', label: 'toolFade', value: fx.fade > 0 ? `${fx.fade} s` : t('fadeOff'), on: fx.fade > 0 },
-    { id: 'format', label: 'toolFormat', value: `${SHAPES.find((x) => x.id === fx.shape)?.ratio ?? '1:1'} ${t(fx.fit === 'whole' ? 'fitWhole' : 'fitFill')}`, on: fx.fit === 'whole' || fx.shape !== 'square' },
+    { id: 'format', label: 'toolFormat', value: t(fx.fit === 'whole' ? 'fitWhole' : 'fitFill'), on: fx.fit === 'whole' || fx.shape !== 'square' },
     { id: 'text', label: 'toolText', value: fx.text.trim() ? Array.from(fx.text.trim()).slice(0, 10).join('') : t('fadeOff'), on: !!fx.text.trim() },
   ]
 
@@ -79,15 +78,6 @@ export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLe
           )}
           {id === 'format' && (
             <>
-              <span className="mini">{t('shapeLabel')}</span>
-              <div className="shapes" role="group" aria-label={t('shapeLabel')}>
-                {SHAPES.map((sh) => (
-                  <button key={sh.id} type="button" aria-pressed={fx.shape === sh.id} onClick={() => onFx({ shape: sh.id })}>
-                    <i style={{ '--sw': (sh.w / 512) * 26, '--sh': (sh.h / 512) * 26 } as React.CSSProperties} />
-                    {sh.ratio}
-                  </button>
-                ))}
-              </div>
               <div className="seg two" role="group" aria-label={t('toolFormat')}>
                 <button type="button" aria-pressed={fx.fit === 'fill'} onClick={() => onFx({ fit: 'fill' })}>{t('fitFill')}</button>
                 <button type="button" aria-pressed={fx.fit === 'whole'} onClick={() => onFx({ fit: 'whole' })}>{t('fitWhole')}</button>
@@ -124,19 +114,16 @@ export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLe
 
   return (
     <div className="tools">
-      <h3 className="tools-head"><Planet />{t('ajustes')}</h3>
-      <ul className="tool-list">
+      <div className="chips tool-chips" role="group" aria-label={t('ajustes')}>
         {tiles.map((x) => (
-          <li key={x.id} className={x.on ? 'set' : ''}>
-            <button type="button" className={open === x.id ? 'open' : ''} aria-expanded={open === x.id} aria-controls="tool-panel" onClick={() => toggle(x.id)}>
-              <u>{t(x.label)}</u>
-              <em>{x.value}</em>
-            </button>
-            {panelFor(x.id)}
-          </li>
+          <button key={x.id} type="button" className={`chip${x.on ? ' set' : ''}`} aria-pressed={open === x.id} aria-expanded={open === x.id} aria-controls="tool-panel" onClick={() => toggle(x.id)}>
+            {t(x.label)}
+            <em>{x.value}</em>
+          </button>
         ))}
-        <li className="help"><button type="button" onClick={onHelp}><u>{t('toolHelp')}</u></button></li>
-      </ul>
+        <button type="button" className="chip help" aria-label={t('toolHelp')} onClick={onHelp}>?</button>
+      </div>
+      {open && panelFor(open)}
     </div>
   )
 }

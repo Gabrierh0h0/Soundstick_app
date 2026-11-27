@@ -8,7 +8,7 @@ import { WaLink } from './WaLink'
 import { LIMITS, MAX_AUDIO_BYTES, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES } from '../lib/limits'
 import { saveSticker } from '../lib/library'
 import { overlayBlob, overlayDataUrl, stickerFrameBlob } from '../lib/overlay'
-import { DEFAULT_FX, boxOf, defaultOrigVolume, needsAudio, type AudioClip, type Effects, type Mode, type Visual } from '../lib/project'
+import { DEFAULT_FX, SHAPES, boxOf, defaultOrigVolume, needsAudio, type AudioClip, type Effects, type Mode, type Visual } from '../lib/project'
 import { download, shareFile } from '../lib/share'
 import { clampWindow, fmt, initialWindow, type Handle } from '../lib/trim'
 import { usePlayback } from '../hooks/usePlayback'
@@ -27,6 +27,7 @@ const IMAGE_NAME = /\.(png|jpe?g|webp)$/i
 const AUDIO_NAME = /\.(mp3|m4a|aac|wav|ogg|oga|opus|webm|flac|amr|3gp)$/i
 const mb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1)
 
+const STEPS = ['stepPick', 'stepAdjust', 'stepSend'] as const
 const MODES: { id: Mode; label: Key }[] = [
   { id: 'video', label: 'srcVideo' },
   { id: 'videoAudio', label: 'srcVideoAudio' },
@@ -83,6 +84,7 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
   const [message, setMessage] = useState<Message>(null)
   const [saved, setSaved] = useState(false)
   const [over, setOver] = useState(false)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
   // El navegador exige un toque reciente para abrir "Compartir"; si exportar tardó, el botón queda armado para el siguiente toque.
   const [armedKey, setArmedKey] = useState('')
 
@@ -365,6 +367,8 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
   }
 
   const busy = phase !== 'idle'
+  const cur = canExport ? step : 1
+  const go = (n: number) => { pb.pause(); setMessage(null); setStep(n as 1 | 2 | 3) }
   const ready = canExport && armedKey !== '' && armedKey === keyOf()
   const tags = visual ? { tl: `${fmt(outLen)} s${fx.speed !== 1 ? ` ${fx.speed}x` : ''}`, tr: t(visual.kind === 'video' ? 'tagVideo' : 'tagImage'), bl: `${LIMITS.outputSize}x${LIMITS.outputSize}` } : { tl: '', tr: '', bl: '' }
   const visAccept = mode === 'video' || mode === 'videoAudio' ? 'video/*' : mode === 'imageAudio' ? 'image/png,image/jpeg,image/webp' : 'image/png,image/jpeg,image/webp,video/*'
@@ -378,14 +382,26 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       <input ref={visInput} type="file" accept={visAccept} hidden onChange={(e) => { void pickVisual(e.target.files?.[0]); e.target.value = '' }} />
       <input ref={audInput} type="file" accept="audio/*" hidden onChange={(e) => { void pickAudio(e.target.files?.[0], 'file'); e.target.value = '' }} />
 
-      <div className="sources" role="group">
-        {MODES.map((m) => (
-          <button key={m.id} type="button" className={mode === m.id ? 'on' : ''} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
-            <ModeIcon mode={m.id} />
-            <span>{t(m.label)}</span>
-          </button>
+      <ol className="stepbar" aria-label={t('stepsLabel')}>
+        {STEPS.map((k, i) => (
+          <li key={k} className={i + 1 <= cur ? 'd' : ''} aria-current={i + 1 === cur ? 'step' : undefined}>
+            <i />
+            {i + 1} {t(k)}
+          </li>
         ))}
-      </div>
+      </ol>
+      <h2 className="step-title">{t(cur === 1 ? 'stepT1' : cur === 2 ? 'stepT2' : 'stepT3')}</h2>
+
+      {cur === 1 && (
+        <div className="sources" role="group">
+          {MODES.map((m) => (
+            <button key={m.id} type="button" className={mode === m.id ? 'on' : ''} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
+              <ModeIcon mode={m.id} />
+              <span>{t(m.label)}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {!visual ? (
         <button type="button" className={`stage pick${over ? ' over' : ''}`} aria-busy={reading} disabled={reading} onClick={() => visInput.current?.click()}>
@@ -396,53 +412,35 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
           </span>
         </button>
       ) : (
-        <>
-          <Preview
-            kind={visual.kind}
-            url={visual.url}
-            width={visual.width}
-            height={visual.height}
-            framing={framing}
-            onFraming={(f) => { setFraming(f); touch() }}
-            videoRef={videoRef}
-            playing={pb.playing}
-            canPlay={hasVideo || !!audio}
-            onTogglePlay={pb.toggle}
-            tags={tags}
-            fit={fx.fit}
-            bg={fx.bg}
-            box={box}
-            overlay={overlay}
-          />
-          {fx.fit === 'fill' && <label className="zoom">
-            <span>{t('zoom')}</span>
-            <input
-              type="range"
-              min={1}
-              max={4}
-              step={0.05}
-              value={framing.zoom}
-              onChange={(e) => { setFraming(clampFraming({ ...framing, zoom: Number(e.target.value) }, visual.width, visual.height, ar)); touch() }}
-            />
-          </label>}
-        </>
+        <Preview
+          kind={visual.kind}
+          url={visual.url}
+          width={visual.width}
+          height={visual.height}
+          framing={framing}
+          onFraming={(f) => { setFraming(f); touch() }}
+          videoRef={videoRef}
+          playing={pb.playing}
+          canPlay={hasVideo || !!audio}
+          onTogglePlay={pb.toggle}
+          tags={tags}
+          fit={fx.fit}
+          bg={fx.bg}
+          box={box}
+          overlay={overlay}
+        />
       )}
       {audio && <audio ref={audioRef} src={audio.url} preload="auto" />}
 
-      {hasVideo && visual && (
-        <div className="trim-block">
-          <Trim label={t('trimVideo')} duration={visual.duration} start={vWin.start} end={vWin.end} time={pb.timeV} maxLen={maxLen} peaks={vPeaks} onChange={changeV} onDragStart={dragStart} onDragEnd={dragEnd} />
-          <p className="readout">
-            {t('trimLen', { len: fmt(vLen), max: fmt(maxLen) })}, {t('fileSize', { mb: mb(visual.file.size), max: LIMITS.maxVideoMB })}
-            <button type="button" className="change" onClick={() => visInput.current?.click()}>{t('changeVisual')}</button>
-          </p>
-        </div>
-      )}
-      {visual && !hasVideo && (
-        <p className="readout">{visual.file.name}<button type="button" className="change" onClick={() => visInput.current?.click()}>{t('changeVisual')}</button></p>
+      {cur === 1 && visual && (
+        <p className="readout">
+          {visual.file.name}
+          {hasVideo && <>, {t('fileSize', { mb: mb(visual.file.size), max: LIMITS.maxVideoMB })}</>}
+          <button type="button" className="change" onClick={() => visInput.current?.click()}>{t('changeVisual')}</button>
+        </p>
       )}
 
-      {needsAudio(mode) && (
+      {cur === 1 && needsAudio(mode) && (
         <div className="audio-block">
           {mode === 'voice' ? (
             <VoiceRecorder hasRecording={!!audio} disabled={reading} onFile={(f) => void pickAudio(f, 'voice')} onError={() => fail('errMic')} />
@@ -455,27 +453,55 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
               </button>
             )
           )}
-          {audio && (
-            <div className="trim-block">
-              <Trim label={t('trimAudio')} accent="cyan" duration={audio.duration} start={aWin.start} end={aWin.end} time={pb.timeA} maxLen={maxLen} peaks={audio.peaks} onChange={changeA} onDragStart={dragStart} onDragEnd={dragEnd} />
-              <p className="readout">
-                {t('trimLen', { len: fmt(aLen), max: fmt(maxLen) })}
-                {audio.kind === 'file' && <button type="button" className="change" onClick={() => audInput.current?.click()}>{t('changeAudio')}</button>}
-              </p>
-            </div>
+          {audio && mode !== 'voice' && (
+            <p className="readout">
+              {audio.file.name}
+              <button type="button" className="change" onClick={() => audInput.current?.click()}>{t('changeAudio')}</button>
+            </p>
           )}
         </div>
       )}
 
-      {visual && <Tools onHelp={onHelp} fx={fx} onFx={onFx} showOrig={showOrig} showAdded={needsAudio(mode)} addedLabel={addedLabel} outLen={outLen} />}
+      {cur === 2 && visual && (
+        <>
+          {fx.fit === 'fill' && (
+            <label className="zoom">
+              <span>{t('zoom')}</span>
+              <input
+                type="range"
+                min={1}
+                max={4}
+                step={0.05}
+                value={framing.zoom}
+                onChange={(e) => { setFraming(clampFraming({ ...framing, zoom: Number(e.target.value) }, visual.width, visual.height, ar)); touch() }}
+              />
+            </label>
+          )}
+          <div className="chips" role="group" aria-label={t('shapeLabel')}>
+            {SHAPES.map((sh) => (
+              <button key={sh.id} type="button" className="chip" aria-pressed={fx.shape === sh.id} onClick={() => onFx({ shape: sh.id })}>{sh.ratio}</button>
+            ))}
+          </div>
+          {hasVideo && (
+            <div className="trim-block">
+              <Trim label={t('trimVideo')} duration={visual.duration} start={vWin.start} end={vWin.end} time={pb.timeV} maxLen={maxLen} peaks={vPeaks} onChange={changeV} onDragStart={dragStart} onDragEnd={dragEnd} />
+            </div>
+          )}
+          {audio && (
+            <div className="trim-block">
+              <Trim label={t('trimAudio')} accent="cyan" duration={audio.duration} start={aWin.start} end={aWin.end} time={pb.timeA} maxLen={maxLen} peaks={audio.peaks} onChange={changeA} onDragStart={dragStart} onDragEnd={dragEnd} />
+            </div>
+          )}
+          <Tools onHelp={onHelp} fx={fx} onFx={onFx} showOrig={showOrig} showAdded={needsAudio(mode)} addedLabel={addedLabel} outLen={outLen} />
+        </>
+      )}
 
-      <div className="actions">
-        <button type="button" className="mg" disabled={!canExport || busy} onClick={onSave}>{t('save')}</button>
-        <button type="button" className={`cy${ready ? ' ready' : ''}`} disabled={!canExport || busy} onClick={onShare}>{ready ? t('shareNow') : t('share')}</button>
-      </div>
-      {waAvailable() && (
-        <div className="actions wa">
-          <button type="button" className="mg" disabled={!canExport || busy} onClick={sendWa}>{t('waSend')}</button>
+      {cur === 3 && visual && (
+        <div className="card">
+          <div className="kv"><b>{t('sumShape')}</b><span>{box.ratio}</span></div>
+          <div className="kv"><b>{t('sumLen')}</b><span>{fmt(outLen)} s</span></div>
+          <div className="kv"><b>{t('sumFile')}</b><span>{visual.file.name}</span></div>
+          <button type="button" className="chip save" disabled={!canExport || busy} onClick={onSave}>{t('save')}</button>
         </div>
       )}
       {linking && <WaLink onClose={() => setLinking(false)} onLinked={() => { setLinking(false); void sendWa() }} />}
@@ -489,6 +515,17 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
         {!busy && message && <p className={message.kind}>{message.text}</p>}
         {!busy && !message && visual && needsAudio(mode) && !audio && <p className="info">{t('needAudio')}</p>}
         {!busy && saved && message?.kind === 'info' && <button type="button" className="next" onClick={onHelp}>{t('savedNext')}</button>}
+      </div>
+
+      <div className="dock">
+        {cur > 1 ? <button type="button" className="back" disabled={busy} onClick={() => go(cur - 1)}>{t('back')}</button> : <span />}
+        {cur < 3 ? (
+          <button type="button" className="pri" disabled={!canExport || busy} onClick={() => go(cur + 1)}>{t('next')}</button>
+        ) : waAvailable() ? (
+          <button type="button" className="pri" disabled={!canExport || busy} onClick={sendWa}>{t('waSend')}</button>
+        ) : (
+          <button type="button" className={`pri${ready ? ' ready' : ''}`} disabled={!canExport || busy} onClick={onShare}>{ready ? t('shareNow') : t('share')}</button>
+        )}
       </div>
     </section>
   )
