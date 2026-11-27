@@ -28,11 +28,11 @@ const AUDIO_NAME = /\.(mp3|m4a|aac|wav|ogg|oga|opus|webm|flac|amr|3gp)$/i
 const mb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1)
 
 const STEPS = ['stepPick', 'stepAdjust', 'stepSend'] as const
-const MODES: { id: Mode; label: Key }[] = [
-  { id: 'video', label: 'srcVideo' },
-  { id: 'videoAudio', label: 'srcVideoAudio' },
-  { id: 'imageAudio', label: 'srcImageAudio' },
-  { id: 'voice', label: 'srcVoice' },
+const MODES: { id: Mode; label: Key; short: Key }[] = [
+  { id: 'video', label: 'srcVideo', short: 'mVideo' },
+  { id: 'videoAudio', label: 'srcVideoAudio', short: 'mVideoAudio' },
+  { id: 'imageAudio', label: 'srcImageAudio', short: 'mImage' },
+  { id: 'voice', label: 'srcVoice', short: 'mVoice' },
 ]
 
 const isVideoFile = (f: File) => f.type.startsWith('video/') || VIDEO_NAME.test(f.name)
@@ -395,9 +395,9 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       {cur === 1 && (
         <div className="sources" role="group">
           {MODES.map((m) => (
-            <button key={m.id} type="button" className={mode === m.id ? 'on' : ''} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
+            <button key={m.id} type="button" className={mode === m.id ? 'on' : ''} aria-pressed={mode === m.id} aria-label={t(m.label)} onClick={() => setMode(m.id)}>
               <ModeIcon mode={m.id} />
-              <span>{t(m.label)}</span>
+              <span>{t(m.short)}</span>
             </button>
           ))}
         </div>
@@ -501,7 +501,7 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
           <div className="kv"><b>{t('sumShape')}</b><span>{box.ratio}</span></div>
           <div className="kv"><b>{t('sumLen')}</b><span>{fmt(outLen)} s</span></div>
           <div className="kv"><b>{t('sumFile')}</b><span>{visual.file.name}</span></div>
-          <button type="button" className="chip save" disabled={!canExport || busy} onClick={onSave}>{t('save')}</button>
+          <button type="button" className="chip save" disabled={busy} onClick={() => go(2)}>{t('back')}</button>
         </div>
       )}
       {linking && <WaLink onClose={() => setLinking(false)} onLinked={() => { setLinking(false); void sendWa() }} />}
@@ -517,16 +517,21 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
         {!busy && saved && message?.kind === 'info' && <button type="button" className="next" onClick={onHelp}>{t('savedNext')}</button>}
       </div>
 
-      <div className="dock">
-        {cur > 1 ? <button type="button" className="back" disabled={busy} onClick={() => go(cur - 1)}>{t('back')}</button> : <span />}
-        {cur < 3 ? (
+      {cur < 3 ? (
+        <div className="dock">
+          {cur > 1 ? <button type="button" className="back" disabled={busy} onClick={() => go(cur - 1)}>{t('back')}</button> : <span />}
           <button type="button" className="pri" disabled={!canExport || busy} onClick={() => go(cur + 1)}>{t('next')}</button>
-        ) : waAvailable() ? (
-          <button type="button" className="pri" disabled={!canExport || busy} onClick={sendWa}>{t('waSend')}</button>
-        ) : (
-          <button type="button" className={`pri${ready ? ' ready' : ''}`} disabled={!canExport || busy} onClick={onShare}>{ready ? t('shareNow') : t('share')}</button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="dock two">
+          <button type="button" className="back" disabled={!canExport || busy} onClick={onSave}>{t('dSave')}</button>
+          {waAvailable() ? (
+            <button type="button" className="pri" disabled={!canExport || busy} onClick={sendWa}>{t('dWa')}</button>
+          ) : (
+            <button type="button" className={`pri${ready ? ' ready' : ''}`} disabled={!canExport || busy} onClick={onShare}>{ready ? t('shareNow') : t('dShare')}</button>
+          )}
+        </div>
+      )}
     </section>
   )
 }

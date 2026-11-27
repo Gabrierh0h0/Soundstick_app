@@ -5,7 +5,7 @@ import { APK_URL, APP_VERSION, checkUpdate, type Update } from './lib/update'
 import { Editor } from './components/Editor'
 import { Help } from './components/Help'
 import { Library } from './components/Library'
-import { Heart, IconDefs } from './components/Icons'
+import { IconDefs } from './components/Icons'
 import { I18nProvider, useT, type Key } from './lib/i18n'
 
 type View = 'create' | 'library' | 'help'
@@ -26,9 +26,9 @@ function Shell() {
     <div className="app">
       <IconDefs />
       <div className="win">
-        <div className="tb" aria-hidden="true">
-          <span className="tb-name"><img src="/logo.svg" alt="" />soundstick</span>
-          <span className="ctl"><i className="heart"><Heart /></i><i className="mn" /><i className="mx" /><i className="cl" /></span>
+        <div className="tb">
+          <span className="tb-name" aria-hidden="true"><img src="/logo.svg" alt="" />soundstick</span>
+          <button type="button" className="help" aria-label={t('navHelp')} onClick={() => setView('help')}>?</button>
         </div>
         <header className="banner">
           <h1 className="logo" aria-label="soundstick">soundstick</h1>

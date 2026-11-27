@@ -10,6 +10,7 @@ import '@fontsource/rubik-glitch/latin-400.css'
 import '@fontsource/oxanium/latin-400.css'
 import '@fontsource/oxanium/latin-700.css'
 import '@fontsource/archivo-black/latin-400.css'
+import '@fontsource/monoton/latin-400.css'
 import './index.css'
 import { Capacitor } from '@capacitor/core'
 

@@ -41,6 +41,7 @@ function Slider({ label, value, min, max, step, shown, onChange }: { label: stri
   )
 }
 
+const cap = (v: string) => v.charAt(0).toUpperCase() + v.slice(1)
 const pct = (v: number) => `${Math.round(v * 100)}%`
 
 export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLen }: Props) {
@@ -117,7 +118,7 @@ export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLe
       <div className="chips tool-chips" role="group" aria-label={t('ajustes')}>
         {tiles.map((x) => (
           <button key={x.id} type="button" className={`chip${x.on ? ' set' : ''}`} aria-pressed={open === x.id} aria-expanded={open === x.id} aria-controls="tool-panel" onClick={() => toggle(x.id)}>
-            {t(x.label)}
+            {cap(t(x.label))}
             <em>{x.value}</em>
           </button>
         ))}
