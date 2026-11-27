@@ -348,3 +348,7 @@ button:disabled { cursor: not-allowed; }
 .lang { margin: 0 0 6px; justify-content: flex-end; }
 .tool-chips .chip { flex: 1 1 28%; padding: 0 6px; }
 .tool-chips .chip em { white-space: nowrap; }
+
+.sources { gap: 6px; }
+.sources button { flex-direction: column; min-height: 76px; padding: 8px 2px 6px; gap: 6px; font-size: 12px; line-height: 1.1; text-align: center; text-wrap: balance; }
+.sources button svg { width: 28px; height: 28px; }

@@ -1,5 +1,3 @@
-const K = { stroke: '#2a0a50', strokeWidth: 2.5, strokeLinejoin: 'round' as const }
-
 /** Degradados compartidos por los íconos; se monta una sola vez en la app. */
 export function IconDefs() {
   const grad = (id: string, a: string, b: string, c: string) => (
@@ -22,40 +20,34 @@ export function IconDefs() {
   )
 }
 
-const shine = <ellipse cx="22" cy="12" rx="12" ry="4" fill="#fff" opacity=".55" />
-
 export function ModeIcon({ mode }: { mode: 'video' | 'videoAudio' | 'imageAudio' | 'voice' }) {
   return (
-    <svg viewBox="0 0 52 46" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
       {mode === 'video' && (
         <>
-          <rect x="3" y="10" width="32" height="26" rx="4" fill="url(#ss-b)" {...K} />
-          <path d="M35 19 L49 11 V35 L35 27 Z" fill="url(#ss-y)" {...K} />
-          <circle cx="14" cy="23" r="6" fill="url(#ss-s)" {...K} />
-          {shine}
+          <rect x="2.5" y="6" width="13" height="12" rx="2" />
+          <path d="M15.5 10.5 21.5 7v10l-6-3.5z" />
         </>
       )}
       {mode === 'videoAudio' && (
         <>
-          <path d="M5 17 H15 L28 6 V40 L15 29 H5 Z" fill="url(#ss-y)" {...K} />
-          <path d="M34 15 Q41 23 34 31 M39 9 Q50 23 39 37" fill="none" stroke="#2a0a50" strokeWidth="3" strokeLinecap="round" />
-          {shine}
+          <rect x="2.5" y="4" width="13" height="10" rx="2" />
+          <path d="M15.5 7.5 21 5v8l-5.5-2.5z" />
+          <path d="M4 18v2M7 17v4M10 18.5v1M13 16.5v5M16 18v2" />
         </>
       )}
       {mode === 'imageAudio' && (
         <>
-          <rect x="4" y="6" width="44" height="34" rx="3" fill="url(#ss-s)" {...K} />
-          <rect x="9" y="11" width="34" height="24" fill="url(#ss-b)" stroke="#2a0a50" strokeWidth="2" />
-          <path d="M9 35 L21 20 L29 29 L35 23 L43 35 Z" fill="url(#ss-g)" stroke="#2a0a50" strokeWidth="2" strokeLinejoin="round" />
-          <circle cx="35" cy="17" r="4" fill="url(#ss-y)" stroke="#2a0a50" strokeWidth="2" />
+          <rect x="2.5" y="3.5" width="19" height="12" rx="2" />
+          <path d="m3 13 5-4.5 4 3.5 3-2.5 6 4" />
+          <circle cx="16.5" cy="7.5" r="1.3" />
+          <path d="M4 19v2M7 18v4M10 19.5v1M13 17.5v5M16 19v2" />
         </>
       )}
       {mode === 'voice' && (
         <>
-          <rect x="18" y="3" width="16" height="25" rx="8" fill="url(#ss-p)" {...K} />
-          <path d="M11 21 Q11 35 26 35 Q41 35 41 21" fill="none" stroke="#2a0a50" strokeWidth="3" strokeLinecap="round" />
-          <path d="M26 35 V43 M18 43 H34" stroke="#2a0a50" strokeWidth="3" strokeLinecap="round" />
-          <ellipse cx="23" cy="10" rx="3" ry="4" fill="#fff" opacity=".6" />
+          <rect x="9" y="2.5" width="6" height="12" rx="3" />
+          <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7" />
         </>
       )}
     </svg>

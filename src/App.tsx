@@ -25,7 +25,7 @@ function Shell() {
           <span className="tb-name"><img src="/logo.svg" alt="" />soundstick</span>
           <span className="tb-btns">
             {view !== 'create' && <button type="button" className="help" aria-label={t('navCreate')} onClick={() => setView('create')}>&lsaquo;</button>}
-            {view === 'create' && <button type="button" className="help" aria-label={t('navLibrary')} onClick={() => setView('library')}>&#9638;</button>}
+            {view === 'create' && <button type="button" className="help" aria-label={t('navLibrary')} onClick={() => setView('library')}><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="2" y="2" width="5" height="5" /><rect x="9" y="2" width="5" height="5" /><rect x="2" y="9" width="5" height="5" /><rect x="9" y="9" width="5" height="5" /></svg></button>}
             <button type="button" className="help" aria-label={t('navHelp')} aria-current={view === 'help' ? 'page' : undefined} onClick={() => setView('help')}>?</button>
           </span>
         </div>

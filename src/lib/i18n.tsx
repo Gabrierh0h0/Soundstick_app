@@ -6,7 +6,7 @@ export const dict = {
   es: {
     updAvail: 'hay una versión nueva ({v})', updGet: 'descargar', updLater: 'luego', dlAndroid: 'descargar para android', dlHint: 'App Android con envío directo a WhatsApp. Es un cliente no oficial: úsala con una cuenta que puedas arriesgar.',
     cutLabel: 'recorte', dSave: 'Guardar', dWa: 'Enviar a WhatsApp', dShare: 'Compartir',
-    mVideo: 'Video', mVideoAudio: 'Audio', mImage: 'Imagen', mVoice: 'Voz',
+    mVideo: 'Video', mVideoAudio: 'Video + audio', mImage: 'Imagen + audio', mVoice: 'Voz',
     stepsLabel: 'pasos', stepPick: 'Elegir', stepAdjust: 'Ajustar', stepSend: 'Enviar', stepT1: '¿Qué quieres usar?', stepT2: 'Ajusta tu sticker', stepT3: 'Listo para enviar', back: '‹ Atrás', next: 'Siguiente ›', sumShape: 'Forma', sumLen: 'Duración', sumFile: 'Archivo',
     noSignal: 'sin señal',
     navCreate: 'crear', navLibrary: 'biblioteca', navHelp: 'ayuda',
@@ -57,7 +57,7 @@ export const dict = {
   en: {
     updAvail: 'new version available ({v})', updGet: 'download', updLater: 'later', dlAndroid: 'download for android', dlHint: 'Android app that sends straight to WhatsApp. It is an unofficial client: use an account you can afford to risk.',
     cutLabel: 'trim', dSave: 'Save', dWa: 'Send to WhatsApp', dShare: 'Share',
-    mVideo: 'Video', mVideoAudio: 'Audio', mImage: 'Image', mVoice: 'Voice',
+    mVideo: 'Video', mVideoAudio: 'Video + audio', mImage: 'Image + audio', mVoice: 'Voice',
     stepsLabel: 'steps', stepPick: 'Pick', stepAdjust: 'Adjust', stepSend: 'Send', stepT1: 'What do you want to use?', stepT2: 'Adjust your sticker', stepT3: 'Ready to send', back: '‹ Back', next: 'Next ›', sumShape: 'Shape', sumLen: 'Length', sumFile: 'File',
     noSignal: 'no signal',
     navCreate: 'create', navLibrary: 'library', navHelp: 'help',
