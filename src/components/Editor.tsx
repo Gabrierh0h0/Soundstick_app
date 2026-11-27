@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useT, type Key } from '../lib/i18n'
-import { readAudio } from '../lib/audio'
+import { analyzeAudio, normalizeRecording, readAudio } from '../lib/audio'
 import { exportSticker, exportWaSticker, loadFFmpeg, type ExportOptions } from '../lib/ffmpeg'
 import { buildExif, injectExif, sha256b64 } from '../lib/wasticker'
 import { waAvailable, waErrorKey, waSend, waState } from '../lib/wa'
@@ -180,6 +180,11 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     if (file.size > MAX_AUDIO_BYTES) return fail('errSize', { mb: mb(file.size), max: LIMITS.maxAudioMB })
     setReading(true)
     try {
+      if (kind === 'voice') {
+        const clean = await normalizeRecording(file)
+        if (!clean) return fail('errVoiceSilent')
+        file = clean
+      }
       const info = await readAudio(file, 96)
       if (!info || !Number.isFinite(info.duration) || info.duration <= 0) return fail('errAudioDecode')
       pb.pause()
@@ -340,6 +345,9 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       if (!opts) return
       setPhase('exporting')
       const r = await exportWaSticker(opts)
+      // Antes de enviar, comprueba que el audio generado se pueda decodificar, dure lo esperado y no esté en silencio.
+      const check = await analyzeAudio(r.opus)
+      if (check && (check.duration < Math.min(r.seconds, outLen) * 0.6 || check.peak < 0.003)) throw new Error('BAD_AUDIO')
       const exif = buildExif(await sha256b64(r.opus))
       const webp = injectExif(r.webp, exif, r.seconds * 1000)
       setPhase('loading')

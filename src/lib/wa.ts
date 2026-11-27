@@ -43,6 +43,7 @@ export function waErrorKey(e: unknown): string {
       PAIR_DAILY: 'waErrPairRate',
       PHONE_INVALID: 'waErrPhone',
       NO_AUDIO: 'waErrNoAudio',
+      BAD_AUDIO: 'waErrBadAudio',
       TOO_BIG: 'waErrBig',
       CONNECT: 'waErrConnect',
       CONNECT_TIMEOUT: 'waErrConnect',
