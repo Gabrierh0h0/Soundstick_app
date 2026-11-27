@@ -7,7 +7,7 @@
 
 [![Última versión](https://img.shields.io/github/v/release/Gabrierh0h0/Soundstick_app?label=versi%C3%B3n&color=9ccc00)](https://github.com/Gabrierh0h0/Soundstick_app/releases/latest)
 [![Android](https://img.shields.io/badge/Android-7.0%2B-00aeef)](#instalar)
-[![Licencia](https://img.shields.io/badge/uso-personal-e3008c)](#aviso-importante)
+[![Licencia](https://img.shields.io/badge/licencia-GPL--3.0-e3008c)](LICENSE)
 
 [**⬇️ Descargar para Android**](https://github.com/Gabrierh0h0/Soundstick_app/releases/latest/download/soundstick.apk) · [Versión web](https://soundstick.vercel.app)
 
@@ -84,6 +84,10 @@ Para reducir el riesgo la app:
 ## Privacidad
 
 Tus videos, imágenes, audios y grabaciones se procesan solo en el teléfono. Lo único que sale es el sticker y su audio, enviados a WhatsApp, y la consulta del último release en GitHub para avisarte de actualizaciones. La sesión de WhatsApp vive en el almacenamiento privado de la app; *desvincular* la borra.
+
+## Legal
+
+Soundstick es software libre bajo **GPL-3.0-or-later** ([LICENSE](LICENSE)). Documentos: [Privacidad](legal/PRIVACY.md) · [Términos](legal/TERMS.md) · [Aviso legal](legal/DISCLAIMER.md) · [Tratamiento de datos (Colombia)](legal/DATA-POLICY-CO.md) · [Uso aceptable](legal/ACCEPTABLE-USE.md) · [Derechos de autor](legal/COPYRIGHT.md) · [Avisos de terceros](legal/THIRD-PARTY-NOTICES.md) · [Seguridad](SECURITY.md) · [Permisos y almacenamiento](legal/PERMISSIONS-AND-STORAGE.md). Índice en [legal/](legal/README.md).
 
 ## Cómo está hecha
 

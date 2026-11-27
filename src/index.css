@@ -391,3 +391,10 @@ button:disabled { cursor: not-allowed; }
 .modal-actions .pri:disabled { color: #6e6490; text-shadow: none; background: var(--lil-2); }
 .help ol.steps { padding-left: 0; }
 .download p, .download small { font: 500 15px/1.4 var(--f-ui); }
+
+.legal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.legal-list li { padding: 0; }
+.legal-list a { display: block; padding: 12px; font: 600 16px/1.2 var(--f-ui); color: var(--link); text-decoration: underline; text-underline-offset: 3px; background: var(--lil-2); border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; }
+.agree { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; margin: 12px 0 0; font: 500 15px/1.45 var(--f-ui); color: var(--ink); }
+.agree input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--pk); }
+.agree a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }

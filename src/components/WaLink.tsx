@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useT, type Key } from '../lib/i18n'
+import { URL_PRIVACY, URL_TERMS, acceptLegal, legalAccepted } from '../lib/legal'
+import { ExtLink } from './ExtLink'
 import { waErrorKey, waKeepAlive, waPair, waState, waUnlink } from '../lib/wa'
 
 const CC: Record<string, string> = { CO: '57', MX: '52', AR: '54', ES: '34', US: '1', CA: '1', PE: '51', CL: '56', EC: '593', VE: '58', BR: '55', BO: '591', UY: '598', PY: '595', CR: '506', PA: '507', GT: '502', DO: '1', GB: '44', FR: '33', DE: '49', IT: '39', PT: '351' }
@@ -16,6 +18,7 @@ export function WaLink({ onClose, onLinked }: Props) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [linked, setLinked] = useState(false)
+  const [agreed, setAgreed] = useState(legalAccepted)
 
   useEffect(() => {
     waState().then((s) => setLinked(s.state === 'linked')).catch(() => {})
@@ -31,6 +34,7 @@ export function WaLink({ onClose, onLinked }: Props) {
   }, [code, onLinked])
 
   async function ask() {
+    acceptLegal()
     setBusy(true)
     setError('')
     try {
@@ -83,10 +87,16 @@ export function WaLink({ onClose, onLinked }: Props) {
               </label>
             </div>
             <p className="callout">{t('wlWarn')}</p>
+            <label className="agree">
+              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+              <span>
+                {t('lgAgree1')} <ExtLink href={URL_TERMS}>{t('lgTerms')}</ExtLink> {t('lgAgree2')} <ExtLink href={URL_PRIVACY}>{t('lgPrivacy')}</ExtLink>.
+              </span>
+            </label>
             {error && <p className="error">{error}</p>}
             <div className="modal-actions">
               <button type="button" className="sec" onClick={onClose}>{t('waCancel')}</button>
-              <button type="button" className="pri" disabled={busy || !phoneOk} onClick={ask}>{busy ? t('waWorking') : t('waGetCode')}</button>
+              <button type="button" className="pri" disabled={busy || !phoneOk || !agreed} onClick={ask}>{busy ? t('waWorking') : t('waGetCode')}</button>
             </div>
           </>
         ) : (

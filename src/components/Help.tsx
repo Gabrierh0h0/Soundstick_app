@@ -1,5 +1,7 @@
 import { useT } from '../lib/i18n'
 import { LIMITS } from '../lib/limits'
+import { LEGAL_DOCS } from '../lib/legal'
+import { ExtLink } from './ExtLink'
 
 function Steps({ items }: { items: string[] }) {
   return (
@@ -38,6 +40,14 @@ export function Help() {
 
       <h2>{t('helpPrivacyTitle')}</h2>
       <p>{t('hPrivacy')}</p>
+
+      <h2>{t('hLegal')}</h2>
+      <ul className="legal-list">
+        {LEGAL_DOCS.map((d) => (
+          <li key={d.key}><ExtLink href={d.url}>{t(d.key)}</ExtLink></li>
+        ))}
+      </ul>
+      <p className="callout">{t('hLegalNote')}</p>
     </section>
   )
 }
