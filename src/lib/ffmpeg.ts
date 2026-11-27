@@ -72,11 +72,13 @@ export async function exportWaSticker(o: ExportOptions): Promise<WaExport> {
   return (await run(o, true)) as WaExport
 }
 
-const WA_MAX_WEBP = 950_000
+/** Tope del núcleo (1 000 000 B) menos el margen del bloque EXIF que se agrega después. */
+const WA_MAX_WEBP = 990_000
 /** Intentos de menor a mayor compresión; si nada cabe, se baja también la fluidez (cuadros por segundo). */
 const WA_ATTEMPTS = [
   { q: 60, fps: 15 }, { q: 48, fps: 15 }, { q: 38, fps: 15 }, { q: 28, fps: 15 }, { q: 20, fps: 15 },
-  { q: 30, fps: 10 }, { q: 20, fps: 10 }, { q: 12, fps: 10 }, { q: 14, fps: 8 }, { q: 8, fps: 8 },
+  { q: 34, fps: 12 }, { q: 24, fps: 12 }, { q: 16, fps: 12 },
+  { q: 24, fps: 10 }, { q: 16, fps: 10 }, { q: 18, fps: 8 }, { q: 10, fps: 8 },
 ]
 /** Avance mostrado por intento: el primero llena casi toda la barra y los reintentos solo la rematan, sin retroceder. */
 const progressOf = (attempt: number, f: number) => {
@@ -214,7 +216,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
           ...args,
           '-filter_complex', graph.join(';'),
           '-map', '[vout]', '-an', '-c:v', 'libwebp_anim', '-lossless', '0', '-q:v', String(q),
-          '-compression_level', '5', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
+          '-compression_level', '6', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
           '-map', '[aout]', '-vn', '-c:a', 'libopus', '-b:a', '32k', '-ac', '1', '-ar', '48000',
           '-t', num(outLen), '-y', 'out.ogg',
         ], EXEC_TIMEOUT)
