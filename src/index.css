@@ -366,7 +366,7 @@ button:disabled { cursor: not-allowed; }
 .steps.compact b { width: 28px; height: 28px; font-size: 15px; }
 .facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .facts li { padding: 8px 12px; background: var(--lil-2); border: 2px solid; border-color: var(--edge) #fff #fff var(--edge); }
-.callout { margin: 12px 0 0; padding: 10px 12px; font: 500 16px/1.45 var(--f-ui); color: var(--ink); background: var(--lil-2); border-left: 6px solid var(--pk); }
+.callout { margin: 12px 0 0; padding: 10px 12px; font: 500 16px/1.45 var(--f-ui); color: var(--ink); background: var(--lil-2); border: 2px solid; border-color: var(--edge) #fff #fff var(--edge); }
 .empty { font: 500 17px/1.5 var(--f-ui); max-width: none; }
 .lib-actions button { font: 700 15px var(--f-ui); text-transform: none; min-height: 44px; }
 .status p { font: 500 16px/1.4 var(--f-ui); }
