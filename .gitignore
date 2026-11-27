@@ -38,3 +38,5 @@ native/out/
 *.keystore
 *.jks
 keystore.properties
+
+MANTENIMIENTO.private.md
