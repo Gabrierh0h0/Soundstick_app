@@ -36,6 +36,11 @@ function Shell() {
             <button type="button" onClick={() => setUpdate(null)}>{t('updLater')}</button>
           </div>
         )}
+        <nav className="navrow" aria-label="Secciones">
+          {([['create', 'navCreate'], ['library', 'navLibrary'], ['help', 'navHelp']] as const).map(([id, label]) => (
+            <button key={id} type="button" aria-current={view === id ? 'page' : undefined} onClick={() => setView(id)}>{t(label)}</button>
+          ))}
+        </nav>
         <div className="body">
         {/* El editor sigue montado al cambiar de vista para no perder el trabajo en curso. */}
         <div hidden={view !== 'create'}><Editor onHelp={() => setView('help')} /></div>
@@ -47,6 +52,7 @@ function Shell() {
               <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>en</button>
             </span>
             <Help />
+            <p className="ver">soundstick {APP_VERSION}</p>
           </>
         )}
         </div>
@@ -56,7 +62,6 @@ function Shell() {
             <small>{t('dlHint')}</small>
           </div>
         )}
-        <footer className="statusbar"><span>{t('ready')}</span><span>soundstick {APP_VERSION}</span></footer>
       </div>
     </div>
   )

@@ -398,3 +398,28 @@ button:disabled { cursor: not-allowed; }
 .agree { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; margin: 12px 0 0; font: 500 15px/1.45 var(--f-ui); color: var(--ink); }
 .agree input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--pk); }
 .agree a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ── Pantalla completa, como una app de verdad ── */
+:root { --top: max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px)); --bottom: max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px)); }
+html, body { background: var(--lil); }
+.app { max-width: 480px; padding: 0; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; overflow-x: clip; }
+.win { flex: 1; display: flex; flex-direction: column; border: 0; box-shadow: none; }
+.tb { height: auto; min-height: 40px; padding: var(--top) 8px 0 12px; box-sizing: content-box; position: relative; }
+.tb > * { min-height: 40px; }
+.tb-name { font-size: 24px; }
+.tb .help { width: 32px; height: 28px; }
+.body { flex: 1; display: flex; flex-direction: column; }
+.body > div:not([hidden]) { flex: 1; display: flex; flex-direction: column; }
+.editor { flex: 1; display: flex; flex-direction: column; }
+.status { flex: 1; }
+.dock { margin: 10px -10px 0; padding-bottom: max(10px, var(--bottom)); }
+.download { margin-bottom: var(--bottom); }
+.navrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px 10px 0; }
+.navrow button { min-height: 44px; text-align: center; font: 700 15px/1 var(--f-ui); color: var(--ink); background: var(--lil); border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; box-shadow: inset -1px -1px 0 #8a79b8; }
+.navrow button[aria-current='page'] { background: var(--yel); border-color: var(--edge) #fff #fff var(--edge); box-shadow: none; }
+.ver { margin: 18px 0 8px; text-align: center; font: 500 14px var(--f-ui); color: #6e6490; }
+@media (min-width: 520px) {
+  .app { min-height: 100dvh; }
+  .win { border-left: 2px solid var(--edge); border-right: 2px solid var(--edge); }
+}
+.navrow button { text-transform: capitalize; }
