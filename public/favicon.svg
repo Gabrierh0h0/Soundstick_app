@@ -1,6 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" rx="56" fill="#4b1a8c"/><g transform="translate(40 40) scale(.69)"><path fill="#9ccc00" fill-rule="evenodd" d="M52 12H204Q244 12 244 52V112L148 148L112 244H52Q12 244 12 204V52Q12 12 52 12Z
-M60 84a12 12 0 0 1 24 0v36a12 12 0 0 1-24 0Z
-M96 52a12 12 0 0 1 24 0v100a12 12 0 0 1-24 0Z
-M132 76a12 12 0 0 1 24 0v52a12 12 0 0 1-24 0Z
-M168 92a12 12 0 0 1 24 0v20a12 12 0 0 1-24 0Z"/>
-<path fill="#9ccc00" d="M244 130 130 244 154 154Z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><defs>
+<linearGradient id="lime" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0ff8a"/><stop offset=".45" stop-color="#a6d800"/><stop offset="1" stop-color="#5b8a00"/></linearGradient>
+<linearGradient id="flap" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d7f27a"/><stop offset="1" stop-color="#8fbf00"/></linearGradient>
+<linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".08"/></linearGradient>
+<clipPath id="bodyclip"><path clip-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/></clipPath>
+</defs>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a5be8"/><stop offset=".5" stop-color="#5a1fa8"/><stop offset="1" stop-color="#2a0a50"/></linearGradient>
+<linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<clipPath id="tc"><rect width="256" height="256" rx="56"/></clipPath></defs>
+<rect width="256" height="256" rx="56" fill="url(#bg)"/>
+<g clip-path="url(#tc)"><path fill="url(#tg)" d="M0 0H256V118Q128 150 0 118Z"/></g>
+<rect x="3" y="3" width="250" height="250" rx="53" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+<g transform="translate(46 40) scale(0.66)">
+<path fill="#1a0536" fill-opacity=".45" fill-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z" transform="translate(5 8)"/>
+<path fill="#1a0536" fill-opacity=".45" d="M236 128 128 236 150 150Z" transform="translate(5 8)"/>
+<path fill="url(#lime)" fill-rule="evenodd" stroke="#2a0a50" stroke-width="7" stroke-linejoin="round" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/>
+<g clip-path="url(#bodyclip)"><path fill="url(#gloss)" d="M0 0H256V92Q128 128 0 92Z"/></g>
+<path fill="url(#flap)" stroke="#2a0a50" stroke-width="7" stroke-linejoin="round" d="M236 128 128 236 150 150Z"/>
+</g></svg>

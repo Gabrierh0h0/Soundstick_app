@@ -245,4 +245,4 @@ button:disabled { cursor: not-allowed; }
 .download small { font: 15px/1.2 var(--f-term); color: var(--ink); }
 
 .tb-name { display: inline-flex; align-items: center; gap: 6px; }
-.tb-name img { width: 16px; height: 16px; background: #4b1a8c; border-radius: 3px; padding: 1px; }
+.tb-name img { width: 18px; height: 18px; }
