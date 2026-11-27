@@ -2,6 +2,10 @@ package app.soundstick;
 
 import android.content.Intent;
 import android.util.Base64;
+import android.view.View;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -31,6 +35,25 @@ public class WaCorePlugin extends Plugin {
     private static String clean(Exception e) {
         String m = e.getMessage();
         return m == null ? "ERROR" : m;
+    }
+
+    /** Alto de las barras del sistema en píxeles CSS, para que la interfaz no quede debajo de la hora ni de los gestos. */
+    @PluginMethod
+    public void insets(PluginCall call) {
+        View root = getActivity().getWindow().getDecorView();
+        float d = getContext().getResources().getDisplayMetrics().density;
+        JSObject o = new JSObject();
+        android.view.WindowInsets raw = root.getRootWindowInsets();
+        if (raw != null) {
+            Insets b = WindowInsetsCompat.toWindowInsetsCompat(raw, root)
+                    .getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            o.put("top", Math.round(b.top / d));
+            o.put("bottom", Math.round(b.bottom / d));
+        } else {
+            o.put("top", 0);
+            o.put("bottom", 0);
+        }
+        call.resolve(o);
     }
 
     @PluginMethod

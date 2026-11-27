@@ -31,9 +31,9 @@ export function ModeIcon({ mode }: { mode: 'video' | 'videoAudio' | 'imageAudio'
       )}
       {mode === 'videoAudio' && (
         <>
-          <rect x="2.5" y="4" width="13" height="10" rx="2" />
-          <path d="M15.5 7.5 21 5v8l-5.5-2.5z" />
-          <path d="M4 18v2M7 17v4M10 18.5v1M13 16.5v5M16 18v2" />
+          <rect x="3" y="3" width="12" height="10" rx="2" />
+          <path d="M15 6.5 21 4v8l-6-2.5z" />
+          <path d="M6 18.5v2M9 17v5M12 19v1M15 17v5M18 18.5v2" />
         </>
       )}
       {mode === 'imageAudio' && (
@@ -41,7 +41,7 @@ export function ModeIcon({ mode }: { mode: 'video' | 'videoAudio' | 'imageAudio'
           <rect x="2.5" y="3.5" width="19" height="12" rx="2" />
           <path d="m3 13 5-4.5 4 3.5 3-2.5 6 4" />
           <circle cx="16.5" cy="7.5" r="1.3" />
-          <path d="M4 19v2M7 18v4M10 19.5v1M13 17.5v5M16 19v2" />
+          <path d="M6 19.5v2M9 18v5M12 20v1M15 18v5M18 19.5v2" />
         </>
       )}
       {mode === 'voice' && (

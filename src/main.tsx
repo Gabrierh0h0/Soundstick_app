@@ -24,6 +24,9 @@ if (Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
   })
 }
 import App from './App.tsx'
+import { applyInsets } from './lib/wa'
+
+void applyInsets()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

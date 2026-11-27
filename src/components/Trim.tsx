@@ -4,7 +4,7 @@ import { LIMITS } from '../lib/limits'
 import { fmt, moveWindow, type Handle } from '../lib/trim'
 
 type Props = {
-  /** Texto accesible y rótulo visible de la pista ("video" o "audio"). */
+  /** Texto accesible de la pista ("video" o "audio"). */
   label: string
   duration: number
   start: number
@@ -14,6 +14,8 @@ type Props = {
   /** Largo máximo de la ventana, en segundos del material fuente. */
   maxLen: number
   peaks: number[] | null
+  /** Cuadros del video como tira de miniaturas; sin ellos se dibuja la onda. */
+  thumbs?: string[] | null
   accent?: 'lime' | 'cyan'
   /** `kind` indica qué se está moviendo, para mostrar el cuadro de ese punto. */
   onChange: (start: number, end: number, kind: Handle) => void
@@ -22,7 +24,8 @@ type Props = {
   onDragEnd?: () => void
 }
 
-export function Trim({ label, duration, start, end, time, maxLen, peaks, accent = 'lime', onChange, onDragStart, onDragEnd }: Props) {
+/** Línea de tiempo de recorte: tira de cuadros (o onda) con una ventana de asas a los lados. */
+export function Trim({ label, duration, start, end, time, maxLen, peaks, thumbs, accent = 'lime', onChange, onDragStart, onDragEnd }: Props) {
   const { t } = useT()
   const track = useRef<HTMLDivElement>(null)
   const drag = useRef<{ kind: Handle; x0: number; start: number; end: number } | null>(null)
@@ -57,24 +60,25 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
   }
 
   const pct = (s: number) => `${(s / duration) * 100}%`
-  const N = 26
+  const N = 56
   const src = peaks ?? Array.from({ length: N }, () => 0.12)
   const bars = Array.from({ length: N }, (_, i) => {
     const a = Math.floor((i * src.length) / N)
     const b = Math.max(a + 1, Math.floor(((i + 1) * src.length) / N))
     return Math.max(0.1, ...src.slice(a, b))
   })
+  const pics = !!thumbs?.length
 
   return (
     <div className={`trim ${accent}`}>
-      <div className="ed">
-      <div className="trim-track" ref={track} role="group" aria-label={peaks ? label : `${label} · ${t('noWave')}`}>
-        <div className="wave" aria-hidden="true">
-          {bars.map((h, i) => {
-            const at = ((i + 0.5) / bars.length) * duration
-            return <i key={i} className={at >= start && at <= end ? 'on' : ''} style={{ height: `${h * 100}%` }} />
-          })}
+      <div className="strip" ref={track} role="group" aria-label={peaks || pics ? label : `${label} · ${t('noWave')}`}>
+        <div className={`frames ${pics ? 'pics' : 'wavy'}`} aria-hidden="true">
+          {pics
+            ? thumbs!.map((s, i) => <img key={i} src={s} alt="" draggable={false} />)
+            : bars.map((h, i) => <i key={i} style={{ height: `${h * 100}%` }} />)}
         </div>
+        <div className="dim" style={{ left: 0, width: pct(start) }} aria-hidden="true" />
+        <div className="dim" style={{ left: pct(end), right: 0 }} aria-hidden="true" />
         <div
           className="trim-window"
           style={{ left: pct(start), width: `${((end - start) / duration) * 100}%` }}
@@ -86,7 +90,7 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
         <i className="playhead" style={{ left: pct(Math.min(Math.max(time, start), end)) }} aria-hidden="true" />
         <button
           type="button"
-          className="handle"
+          className="handle start"
           style={{ left: pct(start) }}
           role="slider"
           aria-label={`${label} · ${t('trimFrom')}`}
@@ -101,7 +105,7 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
         />
         <button
           type="button"
-          className="handle"
+          className="handle end"
           style={{ left: pct(end) }}
           role="slider"
           aria-label={`${label} · ${t('trimTo')}`}
@@ -115,10 +119,10 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
           onKeyDown={key('end')}
         />
       </div>
-      <div className="lcd-foot">
+      <div className="tlabels">
         <span>{fmt(start)}</span>
-        <span>{t('cutLabel')} {fmt(end - start)}</span>
-      </div>
+        <b>{t('cutLabel')} {fmt(end - start)} s</b>
+        <span>{fmt(end)}</span>
       </div>
     </div>
   )

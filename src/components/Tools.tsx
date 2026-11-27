@@ -53,7 +53,7 @@ export function Tools({ fx, onFx, showOrig, showAdded, addedLabel, outLen }: Pro
     { id: 'vol', label: 'toolVolume', value: showOrig && showAdded ? `${Math.round(fx.volOrig * 100)}/${Math.round(fx.volAdd * 100)}` : pct(showOrig ? fx.volOrig : fx.volAdd), on: false },
     { id: 'speed', label: 'toolSpeed', value: `${fx.speed}x`, on: fx.speed !== 1 },
     { id: 'fade', label: 'toolFade', value: fx.fade > 0 ? `${fx.fade} s` : t('fadeOff'), on: fx.fade > 0 },
-    { id: 'format', label: 'toolFormat', value: t(fx.fit === 'whole' ? 'fitWhole' : 'fitFill'), on: fx.fit === 'whole' || fx.shape !== 'square' },
+    { id: 'format', label: 'fitBg', value: fx.bg === 'transparent' ? t('bgClear') : fx.bg === 'blur' ? t('bgBlur') : '●', on: fx.bg !== 'transparent' },
     { id: 'text', label: 'toolText', value: fx.text.trim() ? Array.from(fx.text.trim()).slice(0, 10).join('') : t('fadeOff'), on: !!fx.text.trim() },
   ]
 
@@ -79,11 +79,6 @@ export function Tools({ fx, onFx, showOrig, showAdded, addedLabel, outLen }: Pro
           )}
           {id === 'format' && (
             <>
-              <div className="seg two" role="group" aria-label={t('toolFormat')}>
-                <button type="button" aria-pressed={fx.fit === 'fill'} onClick={() => onFx({ fit: 'fill' })}>{t('fitFill')}</button>
-                <button type="button" aria-pressed={fx.fit === 'whole'} onClick={() => onFx({ fit: 'whole' })}>{t('fitWhole')}</button>
-              </div>
-              <span className="mini">{t('fitBg')}</span>
               <div className="swatches" role="group" aria-label={t('fitBg')}>
                 <button type="button" className="clear" aria-label={t('bgClear')} aria-pressed={fx.bg === 'transparent'} onClick={() => onFx({ bg: 'transparent' })} />
                 <button type="button" className="blur" aria-label={t('bgBlur')} aria-pressed={fx.bg === 'blur'} onClick={() => onFx({ bg: 'blur' })}>{t('bgBlur')}</button>

@@ -8,17 +8,23 @@ export type AudioClip = { kind: 'file' | 'voice'; file: File; url: string; durat
 
 export type TextPos = 'top' | 'center' | 'bottom'
 
-/** Formas del sticker dentro del lienzo de 512x512; lo que sobra queda transparente (o con el fondo elegido). */
-export type Shape = 'square' | 'wide' | 'tall' | 'photo' | 'portrait'
-export const SHAPES: { id: Shape; w: number; h: number; ratio: string }[] = [
-  { id: 'square', w: 512, h: 512, ratio: '1:1' },
-  { id: 'wide', w: 512, h: 288, ratio: '16:9' },
-  { id: 'tall', w: 288, h: 512, ratio: '9:16' },
-  { id: 'photo', w: 512, h: 384, ratio: '4:3' },
-  { id: 'portrait', w: 384, h: 512, ratio: '3:4' },
+/** Proporciones fijas del recuadro; "libre" deja elegir cualquier forma. */
+export type AspectId = 'free' | '1:1' | '16:9' | '9:16' | '4:3' | '3:4'
+export const ASPECTS: { id: AspectId; ratio: number | null }[] = [
+  { id: 'free', ratio: null },
+  { id: '1:1', ratio: 1 },
+  { id: '16:9', ratio: 16 / 9 },
+  { id: '9:16', ratio: 9 / 16 },
+  { id: '4:3', ratio: 4 / 3 },
+  { id: '3:4', ratio: 3 / 4 },
 ]
-/** Medidas de la caja donde cae la imagen dentro del lienzo. */
-export const boxOf = (shape: Shape) => SHAPES.find((s) => s.id === shape) ?? SHAPES[0]
+
+/** Medidas (pares) donde cae el recorte dentro del lienzo cuadrado; lo que sobra queda transparente o con el fondo elegido. */
+export function boxFor(w: number, h: number, size = 512): { w: number; h: number } {
+  const r = w / h
+  const even = (n: number) => Math.max(16, Math.round(n / 2) * 2)
+  return r >= 1 ? { w: size, h: even(size / r) } : { w: even(size * r), h: size }
+}
 
 export type Effects = {
   speed: number
@@ -31,10 +37,6 @@ export type Effects = {
   textPos: TextPos
   textColor: string
   textSize: number
-  /** Forma del sticker dentro del lienzo cuadrado. */
-  shape: Shape
-  /** 'fill' llena la forma recortando; 'whole' muestra todo y deja el sobrante. */
-  fit: 'fill' | 'whole'
   /** Lo que rodea la imagen: 'transparent', 'blur' (el mismo contenido borroso) o un color. */
   bg: string
 }
@@ -48,8 +50,6 @@ export const DEFAULT_FX: Effects = {
   textPos: 'bottom',
   textColor: '#ffffff',
   textSize: 64,
-  shape: 'square',
-  fit: 'fill',
   bg: 'transparent',
 }
 

@@ -423,3 +423,44 @@ html, body { background: var(--lil); }
   .win { border-left: 2px solid var(--edge); border-right: 2px solid var(--edge); }
 }
 .navrow button { text-transform: capitalize; }
+.tb { position: sticky; top: 0; z-index: 20; }
+
+/* ── Recuadro de recorte sobre el visor ── */
+.stage > video, .stage > img:not(.stage-overlay) { position: absolute; max-width: none; pointer-events: none; }
+.cropbox { position: absolute; z-index: 1; border: 2px solid #fff; box-shadow: 0 0 0 999px rgb(20 8 48 / 0.62); cursor: move; touch-action: none; }
+.cropbox::before, .cropbox::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 33.2%, rgb(255 255 255 / 0.35) 33.3% 33.9%, transparent 34% 66%, rgb(255 255 255 / 0.35) 66.1% 66.7%, transparent 66.8%); }
+.cropbox::after { background: linear-gradient(0deg, transparent 33.2%, rgb(255 255 255 / 0.35) 33.3% 33.9%, transparent 34% 66%, rgb(255 255 255 / 0.35) 66.1% 66.7%, transparent 66.8%); }
+.ch { position: absolute; width: 44px; height: 44px; touch-action: none; z-index: 2; }
+.ch::after { content: ''; position: absolute; width: 22px; height: 22px; border: 0 solid #ffe600; }
+.ch.nw { left: -22px; top: -22px; } .ch.nw::after { left: 18px; top: 18px; border-width: 4px 0 0 4px; }
+.ch.ne { right: -22px; top: -22px; } .ch.ne::after { right: 18px; top: 18px; border-width: 4px 4px 0 0; }
+.ch.sw { left: -22px; bottom: -22px; } .ch.sw::after { left: 18px; bottom: 18px; border-width: 0 0 4px 4px; }
+.ch.se { right: -22px; bottom: -22px; } .ch.se::after { right: 18px; bottom: 18px; border-width: 0 4px 4px 0; }
+.play { left: auto; right: 8px; z-index: 3; }
+.tag { z-index: 3; }
+
+/* ── Línea de tiempo tipo editor de video ── */
+.trim .ed { background: none; border: 0; }
+.trim { margin: 0 10px; }
+.strip { position: relative; height: 56px; border-radius: 8px; background: #0b0b1e; touch-action: none; user-select: none; }
+.frames { position: absolute; inset: 0; display: flex; overflow: hidden; border-radius: 8px; }
+.frames.pics img { flex: 1 1 0; min-width: 0; height: 100%; object-fit: cover; pointer-events: none; }
+.frames.wavy { align-items: center; gap: 2px; padding: 6px 4px; }
+.frames.wavy i { flex: 1; min-height: 3px; border-radius: 2px; background: #ff7ad9; }
+.trim.cyan .frames.wavy i { background: #7fe3ee; }
+.dim { position: absolute; top: 0; bottom: 0; background: rgb(11 11 30 / 0.68); pointer-events: none; border-radius: 8px; }
+.trim-window { position: absolute; top: 0; bottom: 0; cursor: grab; border-top: 3px solid #fff; border-bottom: 3px solid #fff; box-sizing: border-box; }
+.handle { position: absolute; top: -3px; bottom: -3px; width: 44px; margin-left: -22px; background: none; cursor: ew-resize; touch-action: none; z-index: 2; }
+.handle::before { content: ''; position: absolute; top: 0; bottom: 0; left: 15px; width: 14px; background: #fff; border-radius: 5px 0 0 5px; }
+.handle.end::before { border-radius: 0 5px 5px 0; }
+.handle.start::before { left: 8px; }
+.handle.end::before { left: 22px; }
+.handle::after { content: ''; position: absolute; top: 50%; width: 2px; height: 16px; margin-top: -8px; background: #5a3a8a; border-radius: 1px; }
+.handle.start::after { left: 14px; }
+.handle.end::after { left: 28px; }
+.playhead { position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.35); z-index: 1; pointer-events: none; opacity: 1; }
+.tlabels { display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px; font: 600 14px var(--f-ui); color: #5a4a86; }
+.tlabels b { font-weight: 700; color: var(--ink); }
+
+.trim { margin: 0 24px; }
+.handle.start::before { left: 8px; }

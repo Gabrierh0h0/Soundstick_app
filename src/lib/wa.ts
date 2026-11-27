@@ -8,6 +8,7 @@ interface WaCorePlugin {
   send(o: { webp: string; audio: string; seconds: number; emojis: string }): Promise<void>
   unlink(): Promise<void>
   keepAlive(o: { on: boolean }): Promise<void>
+  insets(): Promise<{ top: number; bottom: number }>
 }
 
 const Core = registerPlugin<WaCorePlugin>('WaCore')
@@ -49,4 +50,19 @@ export function waErrorKey(e: unknown): string {
       CONNECT_TIMEOUT: 'waErrConnect',
     } as Record<string, string>
   )[code] ?? 'waErrGeneric'
+}
+
+/** En Android, pasa las barras del sistema a la hoja de estilos (--safe-area-inset-*). */
+export async function applyInsets(): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return
+  const set = async () => {
+    try {
+      const { top, bottom } = await Core.insets()
+      const root = document.documentElement.style
+      root.setProperty('--safe-area-inset-top', `${top}px`)
+      root.setProperty('--safe-area-inset-bottom', `${bottom}px`)
+    } catch { /* sin plugin: se queda en cero */ }
+  }
+  await set()
+  window.addEventListener('resize', () => void set())
 }

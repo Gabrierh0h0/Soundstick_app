@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState, type DragEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useT, type Key } from '../lib/i18n'
 import { analyzeAudio, normalizeRecording, readAudio } from '../lib/audio'
 import { exportSticker, exportWaSticker, loadFFmpeg, type ExportOptions } from '../lib/ffmpeg'
@@ -8,11 +8,13 @@ import { WaLink } from './WaLink'
 import { LIMITS, MAX_AUDIO_BYTES, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES } from '../lib/limits'
 import { saveSticker } from '../lib/library'
 import { overlayBlob, overlayDataUrl, stickerFrameBlob } from '../lib/overlay'
-import { DEFAULT_FX, SHAPES, boxOf, defaultOrigVolume, needsAudio, type AudioClip, type Effects, type Mode, type Visual } from '../lib/project'
+import { ASPECTS, DEFAULT_FX, boxFor, defaultOrigVolume, needsAudio, type AudioClip, type AspectId, type Effects, type Mode, type Visual } from '../lib/project'
 import { download, shareFile } from '../lib/share'
 import { clampWindow, fmt, initialWindow, type Handle } from '../lib/trim'
 import { usePlayback } from '../hooks/usePlayback'
-import { clampFraming, framingToCrop, Preview, type Framing } from './Preview'
+import { fitCrop, Preview } from './Preview'
+import type { Crop } from '../lib/ffmpeg'
+import { makeThumbs } from '../lib/thumbs'
 import { Tools } from './Tools'
 import { ModeIcon } from './Icons'
 import { Trim } from './Trim'
@@ -75,7 +77,9 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
   const [vPeaks, setVPeaks] = useState<number[] | null>(null)
   const [vWin, setVWin] = useState<Win>({ start: 0, end: 0 })
   const [aWin, setAWin] = useState<Win>({ start: 0, end: 0 })
-  const [framing, setFraming] = useState<Framing>({ cx: 0, cy: 0, zoom: 1 })
+  const [crop, setCrop] = useState<Crop>({ x: 0, y: 0, w: 1, h: 1 })
+  const [aspect, setAspect] = useState<AspectId>('1:1')
+  const [thumbs, setThumbs] = useState<string[] | null>(null)
   const [fx, setFx] = useState<Effects>(DEFAULT_FX)
   const [phase, setPhase] = useState<Phase>('idle')
   const [reading, setReading] = useState(false)
@@ -108,6 +112,14 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     audioRef,
     mediaKey: `${visual?.url ?? ''}|${audio?.url ?? ''}`,
   })
+
+  useEffect(() => {
+    setThumbs(null)
+    if (!visual || visual.kind !== 'video') return
+    let alive = true
+    makeThumbs(visual.url, visual.duration).then((t) => alive && setThumbs(t)).catch(() => {})
+    return () => { alive = false }
+  }, [visual?.url]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const textStyle = fx.text.trim() ? { text: fx.text, textPos: fx.textPos, textColor: fx.textColor, textSize: fx.textSize } : null
   const overlay = useMemo(() => (textStyle ? overlayDataUrl(textStyle) : null), [fx.text, fx.textPos, fx.textColor, fx.textSize]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -158,7 +170,8 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       cache.current = null
       drop(visual?.url)
       setVisual({ kind: video ? 'video' : 'image', file, url, width, height, duration })
-      setFraming({ cx: width / 2, cy: height / 2, zoom: 1 })
+      setAspect('1:1')
+      setCrop(fitCrop(width, height, 1, width / 2, height / 2))
       setVPeaks(null)
       if (video) {
         setVWin(initialWindow(duration, maxLen))
@@ -201,10 +214,6 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
   function onFx(patch: Partial<Effects>) {
     touch()
     setFx((f) => ({ ...f, ...patch }))
-    if (patch.shape && visual) {
-      const b = boxOf(patch.shape)
-      setFraming((fr) => clampFraming(fr, visual.width, visual.height, b.w / b.h))
-    }
     if (patch.speed !== undefined) {
       const limit = LIMITS.maxSeconds * patch.speed
       setVWin((w) => clampWindow(w, limit))
@@ -234,28 +243,35 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     touch()
   }
 
-  const box = boxOf(fx.shape)
-  const ar = box.w / box.h
+  const box = boxFor(Math.max(1, crop.w), Math.max(1, crop.h), LIMITS.outputSize)
+  const ratio = ASPECTS.find((a) => a.id === aspect)?.ratio ?? null
+  const pickAspect = (id: AspectId) => {
+    if (!visual) return
+    setAspect(id)
+    const r = ASPECTS.find((a) => a.id === id)?.ratio
+    if (r) setCrop((c) => fitCrop(visual.width, visual.height, r, c.x + c.w / 2, c.y + c.h / 2, Math.min(1, Math.max(0.3, Math.max(c.w / visual.width, c.h / visual.height)))))
+    touch()
+  }
   const canExport = !!visual && (!needsAudio(mode) || !!audio) && sourceLen > 0
 
   const keyOf = () => {
     if (!visual || !canExport) return ''
-    const c = framingToCrop(framing, visual.width, visual.height, ar)
+    const c = crop
     return [
       mode, visual.url, audio?.url ?? '', vWin.start.toFixed(2), vWin.end.toFixed(2), aWin.start.toFixed(2), aWin.end.toFixed(2),
-      Math.round(c.x), Math.round(c.y), Math.round(c.w), Math.round(c.h), fx.speed, fx.fade, fx.volOrig, fx.volAdd, fx.text, fx.textPos, fx.textColor, fx.textSize, fx.fit, fx.bg, fx.shape,
+      Math.round(c.x), Math.round(c.y), Math.round(c.w), Math.round(c.h), fx.speed, fx.fade, fx.volOrig, fx.volAdd, fx.text, fx.textPos, fx.textColor, fx.textSize, fx.bg,
     ].join('|')
   }
 
   /** Opciones de exportación; `wa` deja el sobrante transparente en vez de rellenarlo. */
   async function buildOpts(): Promise<ExportOptions | null> {
     if (!visual) return null
-    const crop = framingToCrop(framing, visual.width, visual.height, ar)
+    const cr = { x: Math.round(crop.x), y: Math.round(crop.y), w: Math.max(2, Math.round(crop.w)), h: Math.max(2, Math.round(crop.h)) }
     let vis: ExportOptions['visual']
-    if (visual.kind === 'video') vis = { kind: 'video', file: visual.file, start: vWin.start, crop, whole: fx.fit === 'whole', box, bg: fx.bg }
+    if (visual.kind === 'video') vis = { kind: 'video', file: visual.file, start: vWin.start, crop: cr, whole: false, box, bg: fx.bg }
     else {
       const img = await loadImage(visual.url)
-      vis = { kind: 'image', frame: await stickerFrameBlob(img, { crop, whole: fx.fit === 'whole', box, bg: fx.bg }) }
+      vis = { kind: 'image', frame: await stickerFrameBlob(img, { crop: cr, whole: false, box, bg: fx.bg }) }
     }
     const text = textStyle ? await overlayBlob(textStyle) : null
     return {
@@ -374,7 +390,7 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
 
   const busy = phase !== 'idle'
   const ready = canExport && armedKey !== '' && armedKey === keyOf()
-  const tags = visual ? { tl: `${fmt(outLen)} / ${LIMITS.maxSeconds} s${fx.speed !== 1 ? ` ${fx.speed}x` : ''}`, tr: `${box.ratio} · ${LIMITS.outputSize}`, bl: '' } : { tl: '', tr: '', bl: '' }
+  const tags = visual ? { tl: `${fmt(outLen)} / ${LIMITS.maxSeconds} s${fx.speed !== 1 ? ` ${fx.speed}x` : ''}`, tr: `${aspect === 'free' ? t('aspFree') : aspect} · ${LIMITS.outputSize}` } : { tl: '', tr: '' }
   const visAccept = mode === 'video' || mode === 'videoAudio' ? 'video/*' : mode === 'imageAudio' ? 'image/png,image/jpeg,image/webp' : 'image/png,image/jpeg,image/webp,video/*'
   const pickTitle: Key = mode === 'imageAudio' ? 'pickImage' : mode === 'voice' ? 'pickVisualVoice' : 'pickVideo'
   const pickHint = mode === 'imageAudio' ? t('pickHintImage', { mb: LIMITS.maxImageMB }) : mode === 'voice' ? t('pickHintVoice') : t('pickHintVideo', { mb: LIMITS.maxVideoMB, s: LIMITS.maxSeconds })
@@ -409,16 +425,14 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
           url={visual.url}
           width={visual.width}
           height={visual.height}
-          framing={framing}
-          onFraming={(f) => { setFraming(f); touch() }}
+          crop={crop}
+          onCrop={(c) => { setCrop(c); touch() }}
+          ratio={ratio}
           videoRef={videoRef}
           playing={pb.playing}
           canPlay={hasVideo || !!audio}
           onTogglePlay={pb.toggle}
           tags={tags}
-          fit={fx.fit}
-          bg={fx.bg}
-          box={box}
           overlay={overlay}
         />
       )}
@@ -426,28 +440,15 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
 
       {visual && (
         <div className="chips shapes-row" role="group" aria-label={t('shapeLabel')}>
-          {SHAPES.map((sh) => (
-            <button key={sh.id} type="button" className="chip" aria-pressed={fx.shape === sh.id} onClick={() => onFx({ shape: sh.id })}>{sh.ratio}</button>
+          {ASPECTS.map((a) => (
+            <button key={a.id} type="button" className="chip" aria-pressed={aspect === a.id} onClick={() => pickAspect(a.id)}>{a.id === 'free' ? t('aspFree') : a.id}</button>
           ))}
         </div>
-      )}
-      {visual && fx.fit === 'fill' && (
-        <label className="zoom">
-          <span>{t('zoom')}</span>
-          <input
-            type="range"
-            min={1}
-            max={4}
-            step={0.05}
-            value={framing.zoom}
-            onChange={(e) => { setFraming(clampFraming({ ...framing, zoom: Number(e.target.value) }, visual.width, visual.height, ar)); touch() }}
-          />
-        </label>
       )}
 
       {hasVideo && visual && (
         <div className="trim-block">
-          <Trim label={t('trimVideo')} duration={visual.duration} start={vWin.start} end={vWin.end} time={pb.timeV} maxLen={maxLen} peaks={vPeaks} onChange={changeV} onDragStart={dragStart} onDragEnd={dragEnd} />
+          <Trim label={t('trimVideo')} duration={visual.duration} start={vWin.start} end={vWin.end} time={pb.timeV} maxLen={maxLen} peaks={vPeaks} thumbs={thumbs} onChange={changeV} onDragStart={dragStart} onDragEnd={dragEnd} />
         </div>
       )}
 
