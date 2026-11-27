@@ -519,3 +519,13 @@ html, body { background: var(--lil); }
 .stage { touch-action: pan-y; }
 .cropbox { touch-action: auto; }
 .cropbox.grab { outline: 3px solid var(--yel); outline-offset: 1px; }
+
+/* Altura completa de la tira; lo fino son las asas y las líneas del recorte. */
+.strip { height: 64px; }
+.frames.wavy { padding: 8px 0; }
+.trim-window { border-top-width: 2px; border-bottom-width: 2px; }
+.handle { top: -3px; bottom: -3px; }
+.handle::before { left: 19px; width: 5px; border-radius: 3px; box-shadow: 0 0 0 1px #fff; }
+.handle.start::before, .handle.end::before { left: 19px; }
+.handle::after { left: 20px; width: 3px; height: 14px; margin-top: -7px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px var(--pk); }
+.handle.start::after, .handle.end::after { left: 20px; }
