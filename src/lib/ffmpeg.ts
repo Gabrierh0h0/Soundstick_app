@@ -84,7 +84,20 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     await ff.writeFile(name, await fetchFile(data))
     written.push(name)
   }
-  ff.on('progress', handler)
+  let pass = 0
+  const outSeconds = o.sourceLength / o.speed
+  const onLogLine = ({ message }: { message: string }) => {
+    if (!wa) return
+    // El evento de progreso de ffmpeg.wasm no es fiable con dos salidas; se lee el tiempo del propio registro.
+    const m = /time=(\d+):(\d+):(\d+(?:\.\d+)?)/.exec(message)
+    if (!m) return
+    const t = Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3])
+    const f = Math.min(0.98, Math.max(0, t / outSeconds))
+    const k = 0.5 ** pass
+    o.onProgress?.(1 - k + f * k)
+  }
+  if (!wa) ff.on('progress', handler)
+  ff.on('log', onLogLine)
   try {
     const speed = o.speed
     const outLen = o.sourceLength / speed
@@ -186,6 +199,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       const seconds = Math.min(10, Math.max(1, Math.ceil(outLen)))
       let webp: Uint8Array | null = null
       for (const q of WA_QUALITIES) {
+        pass = WA_QUALITIES.indexOf(q)
         const c = await ff.exec([
           ...args,
           '-filter_complex', chain.join(';'),
@@ -218,7 +232,8 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     o.onProgress?.(1)
     return new Blob([data.slice().buffer], { type: 'video/mp4' })
   } finally {
-    ff.off('progress', handler)
+    if (!wa) ff.off('progress', handler)
+    ff.off('log', onLogLine)
     for (const name of [...written, 'out.mp4', 'out.webp', 'out.ogg']) await ff.deleteFile(name).catch(() => {})
   }
 }
