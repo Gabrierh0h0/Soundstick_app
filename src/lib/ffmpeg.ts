@@ -74,7 +74,17 @@ export async function exportWaSticker(o: ExportOptions): Promise<WaExport> {
 }
 
 const WA_MAX_WEBP = 950_000
-const WA_QUALITIES = [60, 48, 38, 28, 20]
+/** Intentos de menor a mayor compresión; si nada cabe, se baja también la fluidez (cuadros por segundo). */
+const WA_ATTEMPTS = [
+  { q: 60, fps: 15 }, { q: 48, fps: 15 }, { q: 38, fps: 15 }, { q: 28, fps: 15 }, { q: 20, fps: 15 },
+  { q: 30, fps: 10 }, { q: 20, fps: 10 }, { q: 12, fps: 10 }, { q: 14, fps: 8 }, { q: 8, fps: 8 },
+]
+/** Avance mostrado por intento: el primero llena casi toda la barra y los reintentos solo la rematan, sin retroceder. */
+const progressOf = (attempt: number, f: number) => {
+  const lo = attempt === 0 ? 0 : 1 - 0.15 * 0.6 ** (attempt - 1)
+  const hi = 1 - 0.15 * 0.6 ** attempt
+  return lo + f * (hi - lo)
+}
 
 async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
   const ff = await loadFFmpeg()
@@ -93,8 +103,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     if (!m) return
     const t = Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3])
     const f = Math.min(0.98, Math.max(0, t / outSeconds))
-    const k = 0.5 ** pass
-    o.onProgress?.(1 - k + f * k)
+    o.onProgress?.(progressOf(pass, f))
   }
   if (!wa) ff.on('progress', handler)
   ff.on('log', onLogLine)
@@ -198,11 +207,13 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       if (!hasAudio) throw new Error('NO_AUDIO')
       const seconds = Math.min(10, Math.max(1, Math.ceil(outLen)))
       let webp: Uint8Array | null = null
-      for (const q of WA_QUALITIES) {
-        pass = WA_QUALITIES.indexOf(q)
+      for (let i = 0; i < WA_ATTEMPTS.length; i++) {
+        const { q, fps: f } = WA_ATTEMPTS[i]
+        pass = i
+        const graph = f === fps ? chain : chain.map((c) => c.replace(`fps=${fps}`, `fps=${f}`))
         const c = await ff.exec([
           ...args,
-          '-filter_complex', chain.join(';'),
+          '-filter_complex', graph.join(';'),
           '-map', '[vout]', '-an', '-c:v', 'libwebp_anim', '-lossless', '0', '-q:v', String(q),
           '-compression_level', '5', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
           '-map', '[aout]', '-vn', '-c:a', 'libopus', '-b:a', '32k', '-ac', '1', '-ar', '48000',
@@ -211,6 +222,9 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
         if (c !== 0) throw new Error(`ffmpeg exit ${c}`)
         webp = (await ff.readFile('out.webp')) as Uint8Array
         if (webp.length <= WA_MAX_WEBP) break
+        // Si quedó muy por encima del límite, salta intentos intermedios para no repetir la decodificación en vano.
+        const skip = webp.length > WA_MAX_WEBP * 2 ? 2 : webp.length > WA_MAX_WEBP * 1.4 ? 1 : 0
+        i = Math.max(i, Math.min(i + skip, WA_ATTEMPTS.length - 2))
       }
       if (!webp || webp.length > WA_MAX_WEBP) throw new Error('TOO_BIG')
       const opus = (await ff.readFile('out.ogg')) as Uint8Array
