@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Soundstick"><title>Soundstick</title>
+<path fill="#ffffff" fill-rule="evenodd" d="M52 12H204Q244 12 244 52V112L148 148L112 244H52Q12 244 12 204V52Q12 12 52 12Z
+M60 84a12 12 0 0 1 24 0v36a12 12 0 0 1-24 0Z
+M96 52a12 12 0 0 1 24 0v100a12 12 0 0 1-24 0Z
+M132 76a12 12 0 0 1 24 0v52a12 12 0 0 1-24 0Z
+M168 92a12 12 0 0 1 24 0v20a12 12 0 0 1-24 0Z"/>
+<path fill="#ffffff" d="M244 130 130 244 154 154Z"/></svg>

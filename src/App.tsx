@@ -27,7 +27,7 @@ function Shell() {
       <IconDefs />
       <div className="win">
         <div className="tb" aria-hidden="true">
-          <span>soundstick</span>
+          <span className="tb-name"><img src="/logo.svg" alt="" />soundstick</span>
           <span className="ctl"><i className="heart"><Heart /></i><i className="mn" /><i className="mx" /><i className="cl" /></span>
         </div>
         <header className="banner">

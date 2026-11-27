@@ -243,3 +243,6 @@ button:disabled { cursor: not-allowed; }
 .download { display: grid; gap: 4px; padding: 12px; text-align: center; }
 .download a { justify-self: center; padding: 10px 18px; border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; background: #9ccc00; font: 700 16px var(--f-ui); color: var(--ink); text-transform: uppercase; text-decoration: none; }
 .download small { font: 15px/1.2 var(--f-term); color: var(--ink); }
+
+.tb-name { display: inline-flex; align-items: center; gap: 6px; }
+.tb-name img { width: 16px; height: 16px; background: #4b1a8c; border-radius: 3px; padding: 1px; }

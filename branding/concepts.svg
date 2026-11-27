@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="840" viewBox="0 0 1600 840"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="840" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">Logo concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Concepts for review — pick a direction (or tell me what you like in each).</text><rect x="60" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick peel" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet"><title>Soundstick peel</title>
+<path fill-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z
+M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z
+M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z
+M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z
+M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z
+M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/>
+<path d="M236 128 128 236 150 150Z"/></svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick peel" viewBox="0 0 256 256" x="90" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet"><title>Soundstick peel</title>
+<path fill-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z
+M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z
+M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z
+M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z
+M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z
+M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/>
+<path d="M236 128 128 236 150 150Z"/></svg>
+</g><text x="122" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick peel" viewBox="0 0 256 256" x="180" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet"><title>Soundstick peel</title>
+<path fill-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z
+M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z
+M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z
+M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z
+M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z
+M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/>
+<path d="M236 128 128 236 150 150Z"/></svg>
+</g><text x="196" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick peel" viewBox="0 0 256 256" x="238" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet"><title>Soundstick peel</title>
+<path fill-rule="evenodd" d="M52 20H204Q236 20 236 52V119.7L143.4 143.4L119.7 236H52Q20 236 20 204V52Q20 20 52 20Z
+M64 74a8 8 0 0 1 16 0v34a8 8 0 0 1-16 0Z
+M92 54a8 8 0 0 1 16 0v70a8 8 0 0 1-16 0Z
+M120 36a8 8 0 0 1 16 0v104a8 8 0 0 1-16 0Z
+M148 56a8 8 0 0 1 16 0v62a8 8 0 0 1-16 0Z
+M176 74a8 8 0 0 1 16 0v30a8 8 0 0 1-16 0Z"/>
+<path d="M236 128 128 236 150 150Z"/></svg>
+</g><text x="246" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · A · Esquina</text><text x="90.0" y="664" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="90.0" y="698" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Un sticker con la esquina despegada y la</text><text x="90.0" y="724" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">onda de sonido adentro</text><rect x="562.667" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick lollipop" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet"><title>Soundstick lollipop</title>
+<path fill-rule="evenodd" d="M128 20a82 82 0 1 0 0 164a82 82 0 1 0 0-164Z
+M72 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z
+M96 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M120 54a8 8 0 0 1 16 0v96a8 8 0 0 1-16 0Z
+M144 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M168 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z"/>
+<rect x="114" y="168" width="28" height="70" rx="14"/></svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick lollipop" viewBox="0 0 256 256" x="592.667" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet"><title>Soundstick lollipop</title>
+<path fill-rule="evenodd" d="M128 20a82 82 0 1 0 0 164a82 82 0 1 0 0-164Z
+M72 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z
+M96 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M120 54a8 8 0 0 1 16 0v96a8 8 0 0 1-16 0Z
+M144 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M168 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z"/>
+<rect x="114" y="168" width="28" height="70" rx="14"/></svg>
+</g><text x="624.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick lollipop" viewBox="0 0 256 256" x="682.667" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet"><title>Soundstick lollipop</title>
+<path fill-rule="evenodd" d="M128 20a82 82 0 1 0 0 164a82 82 0 1 0 0-164Z
+M72 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z
+M96 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M120 54a8 8 0 0 1 16 0v96a8 8 0 0 1-16 0Z
+M144 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M168 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z"/>
+<rect x="114" y="168" width="28" height="70" rx="14"/></svg>
+</g><text x="698.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick lollipop" viewBox="0 0 256 256" x="740.667" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet"><title>Soundstick lollipop</title>
+<path fill-rule="evenodd" d="M128 20a82 82 0 1 0 0 164a82 82 0 1 0 0-164Z
+M72 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z
+M96 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M120 54a8 8 0 0 1 16 0v96a8 8 0 0 1-16 0Z
+M144 70a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Z
+M168 88a8 8 0 0 1 16 0v28a8 8 0 0 1-16 0Z"/>
+<rect x="114" y="168" width="28" height="70" rx="14"/></svg>
+</g><text x="748.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · B · Paleta</text><text x="592.6666666666667" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Un sticker redondo sobre un palito: la onda</text><text x="592.6666666666667" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">en un chupete que también parece micrófono</text><rect x="1065.33" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick S" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet"><title>Soundstick S</title>
+<g fill="none" stroke="#000" stroke-linecap="round">
+<path stroke-width="30" d="M156 90A38 38 0 1 0 128 140A38 38 0 1 1 100 192"/>
+<path stroke-width="14" d="M186 88A34 34 0 0 0 186 46M214 108A66 66 0 0 0 214 26" transform="translate(-6 8)"/></g></svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick S" viewBox="0 0 256 256" x="1095.33" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet"><title>Soundstick S</title>
+<g fill="none" stroke="#000" stroke-linecap="round">
+<path stroke-width="30" d="M156 90A38 38 0 1 0 128 140A38 38 0 1 1 100 192"/>
+<path stroke-width="14" d="M186 88A34 34 0 0 0 186 46M214 108A66 66 0 0 0 214 26" transform="translate(-6 8)"/></g></svg>
+</g><text x="1127.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick S" viewBox="0 0 256 256" x="1185.33" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet"><title>Soundstick S</title>
+<g fill="none" stroke="#000" stroke-linecap="round">
+<path stroke-width="30" d="M156 90A38 38 0 1 0 128 140A38 38 0 1 1 100 192"/>
+<path stroke-width="14" d="M186 88A34 34 0 0 0 186 46M214 108A66 66 0 0 0 214 26" transform="translate(-6 8)"/></g></svg>
+</g><text x="1201.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Soundstick S" viewBox="0 0 256 256" x="1243.33" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet"><title>Soundstick S</title>
+<g fill="none" stroke="#000" stroke-linecap="round">
+<path stroke-width="30" d="M156 90A38 38 0 1 0 128 140A38 38 0 1 1 100 192"/>
+<path stroke-width="14" d="M186 88A34 34 0 0 0 186 46M214 108A66 66 0 0 0 214 26" transform="translate(-6 8)"/></g></svg>
+</g><text x="1251.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · C · Señal</text><text x="1095.3333333333335" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Una S de una sola línea que emite ondas</text></svg>
