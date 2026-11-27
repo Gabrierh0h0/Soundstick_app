@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Soundstick · ideas de interfaz</title>
+<style>
+@font-face{font-family:Oxanium;font-weight:400;src:url(../../node_modules/@fontsource/oxanium/files/oxanium-latin-400-normal.woff2)}
+@font-face{font-family:Oxanium;font-weight:700;src:url(../../node_modules/@fontsource/oxanium/files/oxanium-latin-700-normal.woff2)}
+@font-face{font-family:VT323;src:url(../../node_modules/@fontsource/vt323/files/vt323-latin-400-normal.woff2)}
+@font-face{font-family:'Archivo Black';src:url(../../node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2)}
+:root{--pu:#4b1a8c;--pk:#e03ac8;--lil:#cfc3e8;--lil2:#e9e0f8;--ink:#1a0a3a;--edge:#3a2a66;--cy:#7fe3ee;--yel:#ffe600;--lime:#9ccc00}
+*{box-sizing:border-box;margin:0}
+body{background:#2a1450;font:15px/1.25 Oxanium,system-ui,sans-serif;color:var(--ink);padding:36px 40px 48px;width:1500px}
+h1{font:44px/1 'Archivo Black';font-style:italic;color:#fff;margin-bottom:6px;letter-spacing:-1px}
+.sub{color:#cfc3e8;font-size:17px;margin-bottom:28px}
+.row{display:flex;gap:36px;align-items:flex-start}
+.col{width:420px}
+.cap{color:#fff;margin-top:16px;font-size:15px;line-height:1.35}
+.cap b{display:block;font:22px 'Archivo Black';font-style:italic;color:var(--cy);margin-bottom:4px}
+.cap small{color:#cfc3e8;font-size:14px}
+.phone{width:420px;height:860px;border-radius:44px;background:#0d0620;padding:12px;box-shadow:0 0 0 2px #5a3aa0,0 18px 40px rgb(0 0 0/.5)}
+.screen{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:#7d5fb5;
+ background-image:linear-gradient(45deg,#8a6cc4 25%,transparent 25%,transparent 75%,#8a6cc4 75%),linear-gradient(45deg,#8a6cc4 25%,transparent 25%,transparent 75%,#8a6cc4 75%);background-size:24px 24px;background-position:0 0,12px 12px;display:flex;flex-direction:column}
+.status{height:30px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:12px;color:#fff;font-weight:700}
+.bev{border:2px solid;border-color:#fff var(--edge) var(--edge) #fff;background:var(--lil)}
+.press{border-color:var(--edge) #fff #fff var(--edge)}
+.tb{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;background:linear-gradient(90deg,#4b1a8c,#b02bb8 60%,#ff4fc3);color:#fff;font:22px/1 VT323;letter-spacing:1px;text-transform:uppercase}
+.tb .help{width:26px;height:24px;display:grid;place-items:center;font:700 15px Oxanium;color:var(--ink);background:var(--lil);border:2px solid;border-color:#fff var(--edge) var(--edge) #fff}
+.win{margin:6px 10px 0;flex:1;display:flex;flex-direction:column;min-height:0;box-shadow:4px 4px 0 rgb(0 0 0/.35)}
+.pad{padding:12px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.checker{background:#fff repeating-conic-gradient(#d9c9f1 0 25%,#fff 0 50%) 0 0/18px 18px}
+.stage{position:relative;aspect-ratio:1;border:2px solid;border-color:var(--edge) #fff #fff var(--edge);display:grid;place-items:center}
+.sticker{position:relative;width:76%;aspect-ratio:16/9;border:3px solid #3b0f6b;border-radius:12px;background:linear-gradient(180deg,#fff 0,#ffd0f0 35%,#e03ac8 58%,#5a1aa0 100%);box-shadow:5px 5px 0 rgb(59 15 107/.55);display:grid;place-items:center;overflow:hidden}
+.sticker::before{content:'';position:absolute;inset:0 0 50%;background:linear-gradient(#fff9,#fff0)}
+.sticker .bars{display:flex;gap:6px;align-items:center;height:60%;position:relative}
+.sticker .bars i{display:block;width:7px;border-radius:4px;background:#4b1a8c}
+.sticker .fold{position:absolute;right:-1px;bottom:-1px;width:34px;height:34px;background:linear-gradient(135deg,transparent 50%,#7fe3ee 50%);border-top-left-radius:0}
+.tag{position:absolute;font:17px/1 VT323;background:#1a0a3a;color:#7dff9a;padding:2px 6px}
+.play{position:absolute;left:10px;bottom:10px;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffb3ec 35%,#e03ac8 70%,#5a1aa0);border:2px solid #3b0f6b;display:grid;place-items:center;color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;font:700 16px Oxanium;color:var(--ink);text-align:center}
+.btn.pri{background:linear-gradient(180deg,#ffd0f0,#e03ac8 55%,#b02bb8);color:#fff;text-shadow:1px 1px 0 #3b0f6b;border-color:#fff #3b0f6b #3b0f6b #fff}
+.chips{display:flex;gap:8px;overflow:hidden}
+.chip{flex:none;min-height:44px;padding:0 14px;display:flex;align-items:center;gap:8px;font:700 14px Oxanium;background:var(--lil);border:2px solid;border-color:#fff var(--edge) var(--edge) #fff}
+.chip em{font:normal 15px VT323;color:#5a1aa0}
+.chip.on{background:var(--yel);border-color:var(--edge) #fff #fff var(--edge)}
+.lcd{background:#120828;border:2px solid;border-color:var(--edge) #fff #fff var(--edge);color:#7dff9a;font:22px/1 VT323;padding:8px 10px}
+.wave{display:flex;align-items:center;gap:3px;height:56px}
+.wave i{flex:1;border-radius:2px;background:#7dff9a}
+.wave i.o{background:#3e6a52}
+.dock{margin:8px 10px 14px;display:flex;gap:10px}
+.lab{font:700 12px Oxanium;color:#5a1aa0;margin-bottom:4px;display:flex;justify-content:space-between}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg .m{min-height:60px;display:grid;place-items:center;gap:2px;font:700 12px Oxanium;padding:6px 2px;background:var(--lil);border:2px solid;border-color:#fff var(--edge) var(--edge) #fff}
+.seg .m.on{background:var(--yel);border-color:var(--edge) #fff #fff var(--edge)}
+.steps{display:flex;gap:6px}
+.steps div{flex:1;height:10px;border:2px solid;border-color:var(--edge) #fff #fff var(--edge);background:#fff}
+.steps div.d{background:linear-gradient(180deg,#ffd0f0,#e03ac8)}
+.fader{display:grid;grid-template-columns:78px 1fr 44px;align-items:center;gap:8px;font:700 13px Oxanium}
+.fader .t{height:12px;border:2px solid;border-color:var(--edge) #fff #fff var(--edge);background:#120828;position:relative}
+.fader .t b{position:absolute;top:-8px;width:20px;height:26px;background:var(--lil);border:2px solid;border-color:#fff var(--edge) var(--edge) #fff}
+.fader output{font:20px VT323;color:#5a1aa0;text-align:right}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="cam" viewBox="0 0 24 24"><rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/></symbol>
+<symbol id="spk" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></symbol>
+<symbol id="img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></symbol>
+<symbol id="mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></symbol>
+<symbol id="play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></symbol>
+<symbol id="send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-7z"/></symbol>
+<symbol id="save" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+</defs></svg>
+
+<h1>soundstick · tres ideas para el editor</h1>
+<p class="sub">Misma estética de portal de los 2000 (bisel, cromo rosa, tablero morado), pero con reglas de uso actuales: acción principal siempre a la mano, objetivos táctiles de 44 px o más, una sola tarea por pantalla y texto legible.</p>
+<div class="row">
+
+<!-- A -->
+<div class="col"><div class="phone"><div class="screen">
+<div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
+<div class="win bev"><div class="tb"><span>soundstick</span><span class="help">?</span></div>
+<div class="pad">
+ <div class="seg">
+  <div class="m on"><svg class="i"><use href="#cam"/></svg>Video</div>
+  <div class="m"><svg class="i"><use href="#spk"/></svg>Audio</div>
+  <div class="m"><svg class="i"><use href="#img"/></svg>Imagen</div>
+  <div class="m"><svg class="i"><use href="#mic"/></svg>Voz</div>
+ </div>
+ <div class="stage checker" style="max-height:240px;aspect-ratio:auto;height:240px">
+  <div class="sticker"><div class="bars"><i style="height:30%"></i><i style="height:60%"></i><i style="height:100%"></i><i style="height:55%"></i><i style="height:28%"></i></div><i class="fold"></i></div>
+  <span class="tag" style="left:8px;top:8px">0:04 / 10 s</span><span class="tag" style="right:8px;top:8px">16:9 · 512</span>
+  <div class="play"><svg class="i"><use href="#play"/></svg></div>
+ </div>
+ <div class="chips"><div class="chip">1:1</div><div class="chip on">16:9</div><div class="chip">9:16</div><div class="chip">4:3</div><div class="chip">3:4</div></div>
+ <div class="lcd"><div class="wave"><i style="height:30%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:45%"></i><i style="height:90%"></i><i style="height:60%"></i><i style="height:35%"></i><i style="height:70%"></i><i class="o" style="height:50%"></i><i class="o" style="height:75%"></i><i class="o" style="height:40%"></i><i class="o" style="height:25%"></i><i class="o" style="height:55%"></i><i class="o" style="height:30%"></i></div><div style="display:flex;justify-content:space-between;margin-top:4px"><span>0:00.0</span><span>recorte 0:04.2</span></div></div>
+ <div class="chips"><div class="chip">Volumen <em>100%</em></div><div class="chip">Velocidad <em>1x</em></div><div class="chip">Fundido</div><div class="chip">Texto</div></div>
+</div></div>
+<div class="dock"><div class="btn bev" style="flex:1"><svg class="i"><use href="#save"/></svg>Guardar</div><div class="btn bev pri" style="flex:2"><svg class="i"><use href="#send"/></svg>Enviar a WhatsApp</div></div>
+</div></div>
+<div class="cap"><b>A · Cubierta</b>Una pantalla, todo a la vista. La vista previa muestra el sticker con su transparencia real. El recorte es una onda en pantalla LCD. Los ajustes son fichas que abren una hoja inferior. Guardar y Enviar quedan fijos abajo, nunca más allá del pliegue.<br><small>Mejor para: gente que ya sabe qué quiere.</small></div></div>
+
+<!-- B -->
+<div class="col"><div class="phone"><div class="screen">
+<div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
+<div class="win bev"><div class="tb"><span>Asistente de stickers</span><span class="help">?</span></div>
+<div class="pad">
+ <div class="steps"><div class="d"></div><div class="d"></div><div></div></div>
+ <div style="display:flex;justify-content:space-between;font:700 13px Oxanium;color:#5a1aa0"><span>1 Elegir</span><span style="color:var(--ink)">2 Ajustar</span><span>3 Enviar</span></div>
+ <h2 style="font:700 22px Oxanium">Ajusta tu sticker</h2>
+ <div class="stage checker" style="aspect-ratio:auto;height:210px">
+  <div class="sticker" style="width:62%;aspect-ratio:1"><div class="bars"><i style="height:30%"></i><i style="height:60%"></i><i style="height:100%"></i><i style="height:55%"></i><i style="height:28%"></i></div><i class="fold"></i></div>
+  <div class="play"><svg class="i"><use href="#play"/></svg></div>
+ </div>
+ <div><div class="lab"><span>Forma</span><span>1:1</span></div><div class="chips"><div class="chip on">1:1</div><div class="chip">16:9</div><div class="chip">9:16</div><div class="chip">4:3</div></div></div>
+ <div><div class="lab"><span>Duración</span><span>4,2 s de 10 s</span></div><div class="lcd" style="padding:6px 8px"><div class="wave" style="height:34px"><i style="height:30%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:45%"></i><i style="height:90%"></i><i style="height:60%"></i><i class="o" style="height:35%"></i><i class="o" style="height:70%"></i><i class="o" style="height:50%"></i><i class="o" style="height:75%"></i></div></div></div>
+ <div class="chip" style="justify-content:space-between;min-height:48px">Más ajustes<span style="font:700 16px Oxanium">›</span></div>
+</div></div>
+<div class="dock"><div class="btn bev" style="flex:1">‹ Atrás</div><div class="btn bev pri" style="flex:2">Siguiente ›</div></div>
+</div></div>
+<div class="cap"><b>B · Asistente</b>Como los instaladores de la época: tres pasos, uno por pantalla, con barra de progreso y botones Atrás y Siguiente. Las opciones avanzadas quedan escondidas en «Más ajustes».<br><small>Mejor para: gente nueva, la primera vez que usa la app.</small></div></div>
+
+<!-- C -->
+<div class="col"><div class="phone"><div class="screen">
+<div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
+<div class="win bev"><div class="tb"><span>soundstick player</span><span class="help">?</span></div>
+<div class="pad" style="gap:10px">
+ <div class="lcd" style="display:grid;grid-template-columns:128px 1fr;gap:10px;padding:10px">
+  <div class="checker" style="height:128px;display:grid;place-items:center;border:2px solid #3a2a66"><div class="sticker" style="width:84%;border-width:2px;box-shadow:3px 3px 0 rgb(59 15 107/.55)"><div class="bars" style="gap:4px"><i style="height:30%;width:5px"></i><i style="height:60%;width:5px"></i><i style="height:100%;width:5px"></i><i style="height:55%;width:5px"></i><i style="height:28%;width:5px"></i></div></div></div>
+  <div style="display:grid;align-content:space-between"><div style="font-size:26px">0:04.2</div><div style="font-size:19px;color:#7fe3ee">voz-001.webm</div><div style="font-size:18px;color:#8fa">512×288 · 15 fps<br>opus 32k · mono</div></div>
+ </div>
+ <div class="lcd" style="padding:6px 10px"><div class="wave" style="height:44px"><i style="height:30%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:45%"></i><i style="height:90%"></i><i style="height:60%"></i><i style="height:35%"></i><i style="height:70%"></i><i class="o" style="height:50%"></i><i class="o" style="height:75%"></i><i class="o" style="height:40%"></i><i class="o" style="height:25%"></i></div></div>
+ <div style="display:flex;gap:10px;justify-content:center;align-items:center">
+  <div class="btn bev" style="width:56px;padding:0"><svg class="i"><use href="#mic"/></svg></div>
+  <div class="play" style="position:static;width:64px;height:64px"><svg class="i" style="width:28px;height:28px"><use href="#play"/></svg></div>
+  <div class="btn bev" style="width:56px;padding:0"><svg class="i"><use href="#img"/></svg></div>
+ </div>
+ <div class="fader"><span>Volumen</span><div class="t"><b style="left:62%"></b></div><output>100%</output></div>
+ <div class="fader"><span>Velocidad</span><div class="t"><b style="left:38%"></b></div><output>1x</output></div>
+ <div class="fader"><span>Fundido</span><div class="t"><b style="left:8%"></b></div><output>off</output></div>
+ <div class="chips"><div class="chip on">1:1</div><div class="chip">16:9</div><div class="chip">9:16</div><div class="chip">4:3</div><div class="chip">Texto</div></div>
+</div></div>
+<div class="dock"><div class="btn bev" style="width:56px;padding:0"><svg class="i"><use href="#save"/></svg></div><div class="btn bev pri" style="flex:1"><svg class="i"><use href="#send"/></svg>Enviar a WhatsApp</div></div>
+</div></div>
+<div class="cap"><b>C · Reproductor</b>El editor como un reproductor de música de 2003: pantalla LCD con tiempo y datos, la onda, botones redondos y deslizadores como faders. El sticker es la «carátula del disco».<br><small>Mejor para: la personalidad más fuerte; la que más se recuerda.</small></div></div>
+
+</div></body></html>

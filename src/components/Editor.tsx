@@ -389,9 +389,11 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
 
       {!visual ? (
         <button type="button" className={`stage pick${over ? ' over' : ''}`} aria-busy={reading} disabled={reading} onClick={() => visInput.current?.click()}>
-          <i className="orb" aria-hidden="true"><b>hola</b></i>
-          <strong>{reading ? t('loadingFile') : t(pickTitle)}</strong>
-          {!reading && <small>{pickHint}</small>}
+          <span className="tag tl">{t('noSignal')}</span>
+          <span className="plate">
+            <strong>{reading ? t('loadingFile') : t(pickTitle)}</strong>
+            {!reading && <small>{pickHint}</small>}
+          </span>
         </button>
       ) : (
         <>

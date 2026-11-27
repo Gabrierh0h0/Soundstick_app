@@ -5,6 +5,7 @@ export type Lang = 'es' | 'en'
 export const dict = {
   es: {
     updAvail: 'hay una versión nueva ({v})', updGet: 'descargar', updLater: 'luego', dlAndroid: 'descargar para android', dlHint: 'App Android con envío directo a WhatsApp. Es un cliente no oficial: úsala con una cuenta que puedas arriesgar.',
+    noSignal: 'sin señal',
     navCreate: 'crear', navLibrary: 'biblioteca', navHelp: 'ayuda',
     srcVideo: 'video + sonido', srcVideoAudio: 'video + audio', srcImageAudio: 'imagen + audio', srcVoice: 'voz',
     pickVideo: 'elige un video', pickImage: 'elige una imagen', pickVisualVoice: 'elige imagen o video',
@@ -52,6 +53,7 @@ export const dict = {
   },
   en: {
     updAvail: 'new version available ({v})', updGet: 'download', updLater: 'later', dlAndroid: 'download for android', dlHint: 'Android app that sends straight to WhatsApp. It is an unofficial client: use an account you can afford to risk.',
+    noSignal: 'no signal',
     navCreate: 'create', navLibrary: 'library', navHelp: 'help',
     srcVideo: 'video + sound', srcVideoAudio: 'video + audio', srcImageAudio: 'image + audio', srcVoice: 'voice',
     pickVideo: 'pick a video', pickImage: 'pick an image', pickVisualVoice: 'pick image or video',
