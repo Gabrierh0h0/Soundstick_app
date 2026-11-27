@@ -39,22 +39,22 @@ type Props = {
 export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRef, playing, canPlay, onTogglePlay, tags, overlay }: Props) {
   const { t } = useT()
   const boxRef = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState(354)
+  const [dim, setDim] = useState({ w: 354, h: 354 })
   const drag = useRef<Drag | null>(null)
 
   useEffect(() => {
     const el = boxRef.current
     if (!el) return
-    const ro = new ResizeObserver(() => setSize(el.clientWidth))
+    const ro = new ResizeObserver(() => setDim({ w: el.clientWidth, h: el.clientHeight }))
     ro.observe(el)
-    setSize(el.clientWidth)
+    setDim({ w: el.clientWidth, h: el.clientHeight })
     return () => ro.disconnect()
   }, [])
 
   // La imagen completa cabe en el visor; el recuadro se dibuja encima.
-  const s = Math.min(size / width, size / height)
-  const ox = (size - width * s) / 2
-  const oy = (size - height * s) / 2
+  const s = Math.min(dim.w / width, dim.h / height)
+  const ox = (dim.w - width * s) / 2
+  const oy = (dim.h - height * s) / 2
   const mediaStyle = { width: width * s, height: height * s, left: ox, top: oy }
   const min = Math.max(16, Math.min(width, height) * MIN_FRAC)
 
@@ -113,7 +113,7 @@ export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRe
   )
 
   return (
-    <div className="stage" ref={boxRef}>
+    <div className="stage" ref={boxRef} style={{ aspectRatio: String(Math.min(1.6, Math.max(0.62, width / height))) }}>
       {kind === 'video' ? (
         <video ref={videoRef} src={url} playsInline preload="auto" style={mediaStyle} />
       ) : (
