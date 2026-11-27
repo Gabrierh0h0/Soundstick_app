@@ -55,47 +55,54 @@ export function WaLink({ onClose, onLinked }: Props) {
     setBusy(false)
   }
 
+  const phoneOk = cc.replace(/\D/g, '').length >= 1 && phone.replace(/\D/g, '').length >= 6
+
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-label={t('waLinkTitle')}>
       <div className="modal-box">
         <h3>{t('waLinkTitle')}</h3>
         {linked ? (
           <>
-            <p>{t('waLinkedOk')}</p>
+            <p className="ok">{t('wlLinked')}</p>
             <div className="modal-actions">
-              <button type="button" disabled={busy} onClick={unlink}>{t('waUnlink')}</button>
-              <button type="button" onClick={onClose}>{t('waCancel')}</button>
+              <button type="button" className="sec" disabled={busy} onClick={unlink}>{t('waUnlink')}</button>
+              <button type="button" className="pri" onClick={onClose}>{t('waCancel')}</button>
+            </div>
+          </>
+        ) : !code ? (
+          <>
+            <p className="stepname">{t('wlStep1')}</p>
+            <div className="num-row">
+              <label className="modal-field cc">
+                <span>{t('waCountry')}</span>
+                <input type="tel" inputMode="numeric" autoComplete="off" placeholder="57" value={cc} onChange={(e) => setCc(e.target.value)} />
+              </label>
+              <label className="modal-field">
+                <span>{t('waPhone')}</span>
+                <input type="tel" inputMode="numeric" autoComplete="off" placeholder={t('waPhoneHint')} value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </label>
+            </div>
+            <p className="callout">{t('wlWarn')}</p>
+            {error && <p className="error">{error}</p>}
+            <div className="modal-actions">
+              <button type="button" className="sec" onClick={onClose}>{t('waCancel')}</button>
+              <button type="button" className="pri" disabled={busy || !phoneOk} onClick={ask}>{busy ? t('waWorking') : t('waGetCode')}</button>
             </div>
           </>
         ) : (
           <>
-            <p className="hint">{t('waLinkWarn')}</p>
-            {!code ? (
-              <>
-                <label className="modal-field">
-                  <span>{t('waCountry')}</span>
-                  <input type="tel" inputMode="numeric" autoComplete="off" placeholder="57" value={cc} onChange={(e) => setCc(e.target.value)} />
-                </label>
-                <label className="modal-field">
-                  <span>{t('waPhone')}</span>
-                  <input type="tel" inputMode="numeric" autoComplete="off" placeholder={t('waPhoneHint')} value={phone} onChange={(e) => setPhone(e.target.value)} />
-                </label>
-                {error && <p className="error">{error}</p>}
-                <div className="modal-actions">
-                  <button type="button" disabled={busy || cc.replace(/\D/g, '').length < 1 || phone.replace(/\D/g, '').length < 6} onClick={ask}>{busy ? t('waWorking') : t('waGetCode')}</button>
-                  <button type="button" onClick={onClose}>{t('waCancel')}</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p>{t('waCodeIntro')}</p>
-                <p className="pair-code" aria-live="polite">{code}</p>
-                <p className="hint">{t('waWaiting')}</p>
-                <div className="modal-actions">
-                  <button type="button" onClick={onClose}>{t('waCancel')}</button>
-                </div>
-              </>
-            )}
+            <p className="stepname">{t('wlStep2')}</p>
+            <ol className="steps compact">
+              {(['wlHow1', 'wlHow2', 'wlHow3', 'wlHow4'] as const).map((k, i) => (
+                <li key={k}><b aria-hidden="true">{i + 1}</b><span>{t(k)}</span></li>
+              ))}
+            </ol>
+            <p className="code-label">{t('wlHow5')}</p>
+            <p className="pair-code" aria-live="polite">{code}</p>
+            <p className="waiting">{t('waWaiting')}</p>
+            <div className="modal-actions">
+              <button type="button" className="sec" onClick={onClose}>{t('waCancel')}</button>
+            </div>
           </>
         )}
       </div>
