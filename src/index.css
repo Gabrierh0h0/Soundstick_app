@@ -529,3 +529,7 @@ html, body { background: var(--lil); }
 .handle.start::before, .handle.end::before { left: 19px; }
 .handle::after { left: 20px; width: 3px; height: 14px; margin-top: -7px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px var(--pk); }
 .handle.start::after, .handle.end::after { left: 20px; }
+
+/* Asa: barra y marca exactamente centradas sobre el punto de corte. */
+.trim .handle::before, .trim .handle.start::before, .trim .handle.end::before { left: 50%; right: auto; margin-left: -2.5px; transform: none; }
+.trim .handle::after, .trim .handle.start::after, .trim .handle.end::after { left: 50%; right: auto; margin-left: -1.5px; transform: none; }
