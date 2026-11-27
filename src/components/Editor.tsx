@@ -266,7 +266,10 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
   /** Opciones de exportación; `wa` deja el sobrante transparente en vez de rellenarlo. */
   async function buildOpts(): Promise<ExportOptions | null> {
     if (!visual) return null
-    const cr = { x: Math.round(crop.x), y: Math.round(crop.y), w: Math.max(2, Math.round(crop.w)), h: Math.max(2, Math.round(crop.h)) }
+    // Medidas pares y siempre dentro del cuadro fuente (un píxel de más hace fallar a ffmpeg).
+    const cw = Math.max(2, Math.min(visual.width, Math.floor(crop.w / 2) * 2))
+    const ch = Math.max(2, Math.min(visual.height, Math.floor(crop.h / 2) * 2))
+    const cr = { w: cw, h: ch, x: Math.max(0, Math.min(Math.round(crop.x), visual.width - cw)), y: Math.max(0, Math.min(Math.round(crop.y), visual.height - ch)) }
     let vis: ExportOptions['visual']
     if (visual.kind === 'video') vis = { kind: 'video', file: visual.file, start: vWin.start, crop: cr, whole: false, box, bg: fx.bg }
     else {

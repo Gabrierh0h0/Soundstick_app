@@ -39,7 +39,8 @@ export type ExportOptions = {
   onProgress?: (fraction: number) => void
 }
 
-const even = (n: number) => Math.max(2, Math.round(n / 2) * 2)
+/** Si ffmpeg se atasca (filtro inválido, memoria), corta en vez de dejar la pantalla en "exportando". */
+const EXEC_TIMEOUT = 150_000
 const num = (n: number) => Number(n.toFixed(3)).toString()
 const extOf = (file: File, fallback: string) => (file.name.split('.').pop() ?? fallback).toLowerCase().replace(/[^a-z0-9]/g, '') || fallback
 
@@ -125,7 +126,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       const { crop, box, bg, whole } = o.visual
       const fg = whole
         ? `scale=${box.w}:${box.h}:force_original_aspect_ratio=decrease:flags=lanczos`
-        : `crop=${even(crop.w)}:${even(crop.h)}:${Math.round(crop.x)}:${Math.round(crop.y)},scale=${box.w}:${box.h}:flags=lanczos`
+        : `crop=${crop.w}:${crop.h}:${crop.x}:${crop.y},scale=${box.w}:${box.h}:flags=lanczos`
       const exact = !whole && box.w === size && box.h === size
       if (exact) {
         chain.push(`${src}${fg},setsar=1,fps=${fps},format=${pf}[v0]`)
@@ -192,7 +193,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
           '-compression_level', '5', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
           '-map', '[aout]', '-vn', '-c:a', 'libopus', '-b:a', '32k', '-ac', '1', '-ar', '48000',
           '-t', num(outLen), '-y', 'out.ogg',
-        ])
+        ], EXEC_TIMEOUT)
         if (c !== 0) throw new Error(`ffmpeg exit ${c}`)
         webp = (await ff.readFile('out.webp')) as Uint8Array
         if (webp.length <= WA_MAX_WEBP) break
@@ -211,7 +212,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '27', '-pix_fmt', 'yuv420p',
       ...(hasAudio ? ['-c:a', 'aac', '-b:a', '128k', '-ac', '2'] : []),
       '-t', num(outLen), '-movflags', '+faststart', '-y', 'out.mp4',
-    ])
+    ], EXEC_TIMEOUT)
     if (code !== 0) throw new Error(`ffmpeg exit ${code}`)
     const data = (await ff.readFile('out.mp4')) as Uint8Array
     o.onProgress?.(1)
