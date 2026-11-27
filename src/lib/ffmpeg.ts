@@ -1,5 +1,4 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile } from '@ffmpeg/util'
 import coreURL from '@ffmpeg/core?url'
 import wasmURL from '@ffmpeg/core/wasm?url'
 import { LIMITS } from './limits'
@@ -91,7 +90,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
   const handler = ({ progress }: { progress: number }) => o.onProgress?.(Math.min(1, Math.max(0, progress)))
   const written: string[] = []
   const put = async (name: string, data: Blob | File) => {
-    await ff.writeFile(name, await fetchFile(data))
+    await ff.writeFile(name, new Uint8Array(await data.arrayBuffer()))
     written.push(name)
   }
   let pass = 0

@@ -140,6 +140,11 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     setModeState(next)
   }
 
+  /** Copia el archivo a memoria: algunos selectores de Android devuelven una referencia que deja de poder leerse más tarde. */
+  async function snapshot(f: File): Promise<File> {
+    return new File([await f.arrayBuffer()], f.name, { type: f.type, lastModified: f.lastModified })
+  }
+
   async function pickVisual(file: File | undefined) {
     if (!file) return
     setMessage(null)
@@ -154,8 +159,14 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     const cap = video ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES
     if (file.size > cap) return fail('errSize', { mb: mb(file.size), max: video ? LIMITS.maxVideoMB : LIMITS.maxImageMB })
 
-    const url = URL.createObjectURL(file)
     setReading(true)
+    try {
+      file = await snapshot(file)
+    } catch {
+      setReading(false)
+      return fail(video ? 'errDecode' : 'errImageDecode')
+    }
+    const url = URL.createObjectURL(file)
     try {
       let width: number
       let height: number
@@ -193,6 +204,7 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
     if (file.size > MAX_AUDIO_BYTES) return fail('errSize', { mb: mb(file.size), max: LIMITS.maxAudioMB })
     setReading(true)
     try {
+      file = await snapshot(file)
       if (kind === 'voice') {
         const clean = await normalizeRecording(file)
         if (!clean) return fail('errVoiceSilent')
@@ -206,6 +218,8 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       const len = hasVideo ? Math.min(vLen, maxLen) : maxLen
       setAudio({ kind, file, url: URL.createObjectURL(file), duration: info.duration, peaks: info.peaks })
       setAWin(initialWindow(info.duration, len))
+    } catch {
+      fail('errAudioDecode')
     } finally {
       setReading(false)
     }
