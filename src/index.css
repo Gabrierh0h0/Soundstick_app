@@ -496,3 +496,21 @@ html, body { background: var(--lil); }
 .playhead { background: #ffe600; width: 3px; margin-left: -1.5px; top: -3px; bottom: -3px; box-shadow: 0 0 0 1px #1a0a3a; }
 .tlabels { font: 18px/1 var(--f-term); color: #3a2a66; margin-top: 10px; }
 .tlabels b { font: 18px/1 var(--f-term); color: var(--ink); padding: 3px 8px; background: #1a0a3a; color: var(--acc-hi); }
+
+/* ── Línea de tiempo fina: línea rosa con asas de píldora, ondas verdes ── */
+.trim, .trim.cyan { --acc: var(--pk); --acc-hi: var(--pk); margin: 0 18px; }
+.strip { height: 34px; border: 0; background: transparent; box-sizing: border-box; }
+.frames { border-radius: 4px; }
+.frames.pics { opacity: 0.9; }
+.frames.wavy { gap: 2px; padding: 4px 0; background: rgb(26 10 58 / 0.08); }
+.frames.wavy i, .trim.cyan .frames.wavy i { background: #2f9e00; border-radius: 2px; }
+.dim { background: rgb(207 195 232 / 0.78); border-radius: 4px; }
+.trim-window { border-top: 2px solid var(--pk); border-bottom: 2px solid var(--pk); box-shadow: none; }
+.handle { top: -4px; bottom: -4px; width: 44px; margin-left: -22px; }
+.handle::before { left: 17px; width: 10px; border: 0; border-radius: 5px; background: var(--pk); box-shadow: 0 0 0 1.5px #fff, 0 1px 3px rgb(26 10 58 / 0.5); }
+.handle.start::before, .handle.end::before { left: 17px; }
+.handle::after { left: 21px; width: 2px; height: 10px; margin-top: -5px; background: #fff; box-shadow: none; border-radius: 1px; }
+.handle.start::after, .handle.end::after { left: 21px; }
+.playhead { background: var(--ink); width: 2px; margin-left: -1px; top: -2px; bottom: -2px; box-shadow: 0 0 0 1px #fff; }
+.tlabels { margin-top: 8px; font: 16px/1 var(--f-term); color: #3a2a66; }
+.tlabels b { font: 16px/1 var(--f-term); padding: 0; background: none; color: var(--ink); }
