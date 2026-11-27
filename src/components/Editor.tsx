@@ -15,6 +15,7 @@ import { usePlayback } from '../hooks/usePlayback'
 import { fitCrop, Preview } from './Preview'
 import type { Crop } from '../lib/ffmpeg'
 import { makeThumbs } from '../lib/thumbs'
+import { canCaptureFrames, captureFrames } from '../lib/frames'
 import { Tools } from './Tools'
 import { ModeIcon } from './Icons'
 import { Trim } from './Trim'
@@ -377,6 +378,19 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       const opts = await buildOpts()
       if (!opts) return
       setPhase('exporting')
+      if (opts.visual.kind === 'video' && visual?.kind === 'video' && canCaptureFrames()) {
+        // Camino rápido: el decodificador del teléfono saca los cuadros ya recortados; ffmpeg solo los codifica.
+        const v = opts.visual
+        try {
+          const frames = await captureFrames({
+            url: visual.url, start: v.start, length: opts.sourceLength, fps: 15, crop: v.crop, box: v.box, bg: v.bg,
+            onProgress: (f) => setProgress(f * 0.3),
+          })
+          opts.visual = { kind: 'frames', frames, fps: 15, audioFile: v.file, start: v.start }
+        } catch (e) {
+          console.warn('frames', e) // si falla, sigue por el camino completo con ffmpeg
+        }
+      }
       const r = await exportWaSticker(opts)
       // Antes de enviar, comprueba que el audio generado se pueda decodificar, dure lo esperado y no esté en silencio.
       const check = await analyzeAudio(r.opus)

@@ -26,6 +26,8 @@ export type Crop = { x: number; y: number; w: number; h: number }
 export type ExportOptions = {
   /** Video fuente (se recorta con `crop`) o, para imágenes, el cuadro 512x512 ya dibujado. */
   visual: { kind: 'video'; file: File; start: number; crop: Crop; whole: boolean; box: { w: number; h: number }; bg: string } | { kind: 'image'; frame: Blob }
+    /** Cuadros 512x512 ya recortados (ver frames.ts); el audio original se toma del archivo de video. */
+    | { kind: 'frames'; frames: Blob[]; fps: number; audioFile: File; start: number }
   /** Audio aparte (archivo o voz) y desde dónde se usa. */
   audio: { file: File; start: number } | null
   /** Segundos de material fuente que entran al sticker (antes de aplicar la velocidad). */
@@ -39,7 +41,7 @@ export type ExportOptions = {
 }
 
 /** Si ffmpeg se atasca (filtro inválido, memoria), corta en vez de dejar la pantalla en "exportando". */
-const EXEC_TIMEOUT = 150_000
+const EXEC_TIMEOUT = 240_000
 const num = (n: number) => Number(n.toFixed(3)).toString()
 const extOf = (file: File, fallback: string) => (file.name.split('.').pop() ?? fallback).toLowerCase().replace(/[^a-z0-9]/g, '') || fallback
 
@@ -89,7 +91,9 @@ const progressOf = (attempt: number, f: number) => {
 
 async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
   const ff = await loadFFmpeg()
-  const handler = ({ progress }: { progress: number }) => o.onProgress?.(Math.min(1, Math.max(0, progress)))
+  // Con cuadros ya capturados, la captura ocupa el primer tramo de la barra y la codificación el resto.
+  const report = (p: number) => o.onProgress?.(o.visual.kind === 'frames' ? 0.3 + 0.7 * p : p)
+  const handler = ({ progress }: { progress: number }) => report(Math.min(1, Math.max(0, progress)))
   const written: string[] = []
   const put = async (name: string, data: Blob | File) => {
     await ff.writeFile(name, new Uint8Array(await data.arrayBuffer()))
@@ -104,7 +108,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     if (!m) return
     const t = Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3])
     const f = Math.min(0.98, Math.max(0, t / outSeconds))
-    o.onProgress?.(progressOf(pass, f))
+    report(progressOf(pass, f))
   }
   if (!wa) ff.on('progress', handler)
   ff.on('log', onLogLine)
@@ -114,7 +118,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     const fade = Math.min(o.fade, outLen / 2)
     const args: string[] = []
     let next = 0
-    const idx = { visual: next++, audio: -1, overlay: -1 }
+    const idx = { visual: next++, vaudio: -1, audio: -1, overlay: -1 }
 
     // ── Entradas ──
     let origAudio = false
@@ -123,6 +127,17 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       await put(name, o.visual.file)
       origAudio = await hasAudioStream(ff, name)
       args.push('-ss', num(o.visual.start), '-t', num(o.sourceLength), '-i', name)
+    } else if (o.visual.kind === 'frames') {
+      const { frames, fps: capFps, audioFile, start } = o.visual
+      for (let i = 0; i < frames.length; i++) await put(`f${String(i).padStart(4, '0')}.png`, frames[i])
+      args.push('-framerate', String(capFps), '-i', 'f%04d.png')
+      const name = `in-video.${extOf(audioFile, 'mp4')}`
+      await put(name, audioFile)
+      origAudio = await hasAudioStream(ff, name)
+      if (origAudio) {
+        idx.vaudio = next++
+        args.push('-ss', num(start), '-t', num(o.sourceLength), '-i', name)
+      }
     } else {
       await put('frame.png', o.visual.frame)
       args.push('-loop', '1', '-framerate', '30', '-t', num(o.sourceLength), '-i', 'frame.png')
@@ -184,7 +199,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     const sources: string[] = []
     const useOrig = origAudio && (o.audio === null || o.volOrig > 0)
     if (useOrig) {
-      chain.push(`[${idx.visual}:a]aresample=44100,aformat=channel_layouts=stereo,volume=${num(o.volOrig)}[ao]`)
+      chain.push(`[${idx.vaudio >= 0 ? idx.vaudio : idx.visual}:a]aresample=44100,aformat=channel_layouts=stereo,volume=${num(o.volOrig)}[ao]`)
       sources.push('ao')
     }
     if (o.audio) {
@@ -216,7 +231,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
           ...args,
           '-filter_complex', graph.join(';'),
           '-map', '[vout]', '-an', '-c:v', 'libwebp_anim', '-lossless', '0', '-q:v', String(q),
-          '-compression_level', '6', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
+          '-compression_level', '3', '-loop', '0', '-t', num(outLen), '-y', 'out.webp',
           '-map', '[aout]', '-vn', '-c:a', 'libopus', '-b:a', '32k', '-ac', '1', '-ar', '48000',
           '-t', num(outLen), '-y', 'out.ogg',
         ], EXEC_TIMEOUT)
@@ -229,7 +244,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       }
       if (!webp || webp.length > WA_MAX_WEBP) throw new Error('TOO_BIG')
       const opus = (await ff.readFile('out.ogg')) as Uint8Array
-      o.onProgress?.(1)
+      report(1)
       return { webp: webp.slice(), opus: opus.slice(), seconds }
     }
 
@@ -244,7 +259,7 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
     ], EXEC_TIMEOUT)
     if (code !== 0) throw new Error(`ffmpeg exit ${code}`)
     const data = (await ff.readFile('out.mp4')) as Uint8Array
-    o.onProgress?.(1)
+    report(1)
     return new Blob([data.slice().buffer], { type: 'video/mp4' })
   } finally {
     if (!wa) ff.off('progress', handler)
