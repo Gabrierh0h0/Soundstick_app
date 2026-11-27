@@ -44,7 +44,7 @@ function Slider({ label, value, min, max, step, shown, onChange }: { label: stri
 const cap = (v: string) => v.charAt(0).toUpperCase() + v.slice(1)
 const pct = (v: number) => `${Math.round(v * 100)}%`
 
-export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLen }: Props) {
+export function Tools({ fx, onFx, showOrig, showAdded, addedLabel, outLen }: Props) {
   const { t } = useT()
   const [open, setOpen] = useState<ToolId | null>(null)
   const toggle = (id: ToolId) => setOpen((cur) => (cur === id ? null : id))
@@ -122,7 +122,6 @@ export function Tools({ onHelp, fx, onFx, showOrig, showAdded, addedLabel, outLe
             <em>{x.value}</em>
           </button>
         ))}
-        <button type="button" className="chip help" aria-label={t('toolHelp')} onClick={onHelp}>?</button>
       </div>
       {open && panelFor(open)}
     </div>

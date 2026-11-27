@@ -313,3 +313,38 @@ button:disabled { cursor: not-allowed; }
 .dock button:not(:disabled):active { border-color: var(--edge) #fff #fff var(--edge); }
 
 .tb .help { width: 24px; height: 22px; display: grid; place-items: center; font: 700 14px var(--f-ui); color: var(--ink); background: var(--lil); border: 2px solid; border-color: #fff var(--edge) var(--edge) #fff; }
+
+/* ── Maqueta A al pie de la letra ── */
+.tb .help { margin-left: 4px; }
+.tb-btns { display: flex; align-items: center; }
+.body { margin: 0; padding: 10px 10px 4px; background: transparent; border: 0; }
+.sources button { min-height: 40px; font-size: 13px; }
+.tag { font: 17px/1 var(--f-term); text-transform: none; color: #7dff9a; background: #0b0b1e; border: 1px solid #6a6aa8; padding: 3px 6px 2px; }
+.tag.tr { color: #7dff9a; background: #0b0b1e; border-color: #6a6aa8; }
+.tag.bl { color: #7dff9a; background: #0b0b1e; border-color: #6a6aa8; }
+.play { right: auto; left: 8px; width: 40px; height: 40px; border-radius: 50%; border-color: #fff #4a1a6e #4a1a6e #fff; }
+.play i.tri { width: 12px; height: 16px; margin-left: 3px; }
+.shapes-row { margin: 10px 0 0; }
+.shapes-row .chip { min-height: 38px; font-size: 13px; }
+.zoom { min-height: 32px; font-size: 12px; margin-top: 0; }
+.trim .ed { background: #07130d; border-color: var(--edge) #fff #fff var(--edge); }
+.trim-block { margin-top: 10px; }
+.trim-track { height: 64px; background: none; padding: 0; }
+.wave { gap: 3px; padding: 6px 6px; }
+.wave i { background: #2f6a47; min-width: 3px; border-radius: 1px; }
+.wave i.on { background: #5dff8f; }
+.trim.cyan .wave i.on { background: #7fe3ee; }
+.handle::before { background: #ff4fc3; }
+.handle::after { background: #ff4fc3; }
+.playhead { background: #fff; opacity: 0.8; }
+.lcd-foot { display: flex; justify-content: space-between; padding: 3px 8px 2px; font: 18px/1 var(--f-term); color: #7dff9a; }
+.tools { margin-top: 8px; }
+.tool-chips .chip { font-size: 13px; min-height: 40px; }
+.tool-chips .chip em { font-size: 13px; }
+.change { display: block; margin: 4px 0 0 auto; min-height: 32px; font-size: 12px; }
+.dock { margin: 10px -10px 0; border-radius: 0; }
+.dock button svg { width: 18px; height: 18px; flex: none; }
+.dock .back { color: var(--ink); background: var(--lil); }
+.lang { margin: 0 0 6px; justify-content: flex-end; }
+.tool-chips .chip { flex: 1 1 28%; padding: 0 6px; }
+.tool-chips .chip em { white-space: nowrap; }

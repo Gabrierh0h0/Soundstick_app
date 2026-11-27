@@ -122,7 +122,7 @@ export function Preview({ kind, url, width, height, framing, onFraming, videoRef
       {overlay && <img className="stage-overlay" src={overlay} alt="" draggable={false} />}
       <span className="tag tl">{tags.tl}</span>
       <span className="tag tr">{tags.tr}</span>
-      <span className="tag bl">{tags.bl}</span>
+      {tags.bl && <span className="tag bl">{tags.bl}</span>}
       <button type="button" className="play" onClick={onTogglePlay} disabled={!canPlay} aria-label={playing ? t('pause') : t('play')}>
         <i className={playing ? 'pause' : 'tri'} />
       </button>

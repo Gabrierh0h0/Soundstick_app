@@ -6,14 +6,9 @@ import { Editor } from './components/Editor'
 import { Help } from './components/Help'
 import { Library } from './components/Library'
 import { IconDefs } from './components/Icons'
-import { I18nProvider, useT, type Key } from './lib/i18n'
+import { I18nProvider, useT } from './lib/i18n'
 
 type View = 'create' | 'library' | 'help'
-const VIEWS: { id: View; label: Key }[] = [
-  { id: 'create', label: 'navCreate' },
-  { id: 'library', label: 'navLibrary' },
-  { id: 'help', label: 'navHelp' },
-]
 
 function Shell() {
   const { t, lang, setLang } = useT()
@@ -27,12 +22,13 @@ function Shell() {
       <IconDefs />
       <div className="win">
         <div className="tb">
-          <span className="tb-name" aria-hidden="true"><img src="/logo.svg" alt="" />soundstick</span>
-          <button type="button" className="help" aria-label={t('navHelp')} onClick={() => setView('help')}>?</button>
+          <span className="tb-name"><img src="/logo.svg" alt="" />soundstick</span>
+          <span className="tb-btns">
+            {view !== 'create' && <button type="button" className="help" aria-label={t('navCreate')} onClick={() => setView('create')}>&lsaquo;</button>}
+            {view === 'create' && <button type="button" className="help" aria-label={t('navLibrary')} onClick={() => setView('library')}>&#9638;</button>}
+            <button type="button" className="help" aria-label={t('navHelp')} aria-current={view === 'help' ? 'page' : undefined} onClick={() => setView('help')}>?</button>
+          </span>
         </div>
-        <header className="banner">
-          <h1 className="logo" aria-label="soundstick">soundstick</h1>
-        </header>
         {update && (
           <div className="update" role="status">
             <span>{t('updAvail', { v: update.version })}</span>
@@ -40,23 +36,19 @@ function Shell() {
             <button type="button" onClick={() => setUpdate(null)}>{t('updLater')}</button>
           </div>
         )}
-        <div className="tick" aria-hidden="true"><span>{t('ticker')}</span></div>
-        <nav className="pivot" aria-label="Secciones">
-          {VIEWS.map((v) => (
-            <button key={v.id} type="button" aria-current={view === v.id ? 'page' : undefined} onClick={() => setView(v.id)}>
-              {t(v.label)}
-            </button>
-          ))}
-          <span className="lang" role="group" aria-label="Idioma / Language">
-            <button type="button" aria-pressed={lang === 'es'} onClick={() => setLang('es')}>es</button>
-            <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>en</button>
-          </span>
-        </nav>
         <div className="body">
         {/* El editor sigue montado al cambiar de vista para no perder el trabajo en curso. */}
         <div hidden={view !== 'create'}><Editor onHelp={() => setView('help')} /></div>
         {view === 'library' && <Library />}
-        {view === 'help' && <Help />}
+        {view === 'help' && (
+          <>
+            <span className="lang" role="group" aria-label="Idioma / Language">
+              <button type="button" aria-pressed={lang === 'es'} onClick={() => setLang('es')}>es</button>
+              <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>en</button>
+            </span>
+            <Help />
+          </>
+        )}
         </div>
         {!native && (
           <div className="download">

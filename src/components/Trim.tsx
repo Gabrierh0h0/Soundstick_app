@@ -57,21 +57,18 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
   }
 
   const pct = (s: number) => `${(s / duration) * 100}%`
-  const lit = Math.max(1, Math.min(10, Math.round(((end - start) / maxLen) * 10)))
-  const bars = peaks ?? Array.from({ length: 64 }, () => 0.12)
-  // Regla de segundos, con a lo sumo ~8 marcas para que no se amontonen.
-  const step = Math.max(1, Math.ceil(duration / 8))
-  const marks = Array.from({ length: Math.floor(duration / step) + 1 }, (_, i) => i * step).filter((m) => m < duration)
+  const N = 26
+  const src = peaks ?? Array.from({ length: N }, () => 0.12)
+  const bars = Array.from({ length: N }, (_, i) => {
+    const a = Math.floor((i * src.length) / N)
+    const b = Math.max(a + 1, Math.floor(((i + 1) * src.length) / N))
+    return Math.max(0.1, ...src.slice(a, b))
+  })
 
   return (
     <div className={`trim ${accent}`}>
-      <span className="trim-label">{label}</span>
       <div className="ed">
-      <div className="ruler" aria-hidden="true">
-        {marks.map((m) => <s key={m} style={{ left: pct(m) }}>{m}s</s>)}
-      </div>
       <div className="trim-track" ref={track} role="group" aria-label={peaks ? label : `${label} · ${t('noWave')}`}>
-        <div className="sel-bg" style={{ left: pct(start), width: `${((end - start) / duration) * 100}%` }} aria-hidden="true" />
         <div className="wave" aria-hidden="true">
           {bars.map((h, i) => {
             const at = ((i + 0.5) / bars.length) * duration
@@ -118,24 +115,9 @@ export function Trim({ label, duration, start, end, time, maxLen, peaks, accent 
           onKeyDown={key('end')}
         />
       </div>
-      <div className="cells">
-        <span className="stp">
-          <button type="button" aria-label={`${t('trimFrom')} −0,1 s`} onClick={() => apply('start', { start, end }, -0.1)}>−</button>
-          <em><b>{t('trimFrom')}</b>{fmt(start)} s</em>
-          <button type="button" aria-label={`${t('trimFrom')} +0,1 s`} onClick={() => apply('start', { start, end }, 0.1)}>+</button>
-        </span>
-        <span className="stp">
-          <button type="button" aria-label={`${t('trimTo')} −0,1 s`} onClick={() => apply('end', { start, end }, -0.1)}>−</button>
-          <em><b>{t('trimTo')}</b>{fmt(end)} s</em>
-          <button type="button" aria-label={`${t('trimTo')} +0,1 s`} onClick={() => apply('end', { start, end }, 0.1)}>+</button>
-        </span>
-        <span className="span">
-          <b>{t('trimSpan')}</b>
-          <span className="pips" aria-hidden="true">
-            {Array.from({ length: 10 }, (_, i) => <i key={i} className={i < lit ? 'l' : ''} />)}
-          </span>
-          <em>{fmt(end - start)} / {fmt(maxLen)} s</em>
-        </span>
+      <div className="lcd-foot">
+        <span>{fmt(start)}</span>
+        <span>{t('cutLabel')} {fmt(end - start)}</span>
       </div>
       </div>
     </div>
