@@ -1,8 +1,9 @@
 import { Capacitor } from '@capacitor/core'
 
 export const APP_VERSION = __APP_VERSION__
-export const APK_URL = 'https://github.com/Gabrierh0h0/Soundstick/releases/latest/download/soundstick.apk'
-const VERSION_URL = 'https://soundstick.vercel.app/version.json'
+const REPO = 'Gabrierh0h0/Soundstick_app'
+export const APK_URL = `https://github.com/${REPO}/releases/latest/download/soundstick.apk`
+const LATEST_URL = `https://api.github.com/repos/${REPO}/releases/latest`
 
 export type Update = { version: string; url: string; notes: string }
 
@@ -17,15 +18,16 @@ export function isNewer(a: string, b: string): boolean {
   return false
 }
 
-/** Consulta si hay una versión nueva. Solo en la app Android; cualquier fallo se ignora. */
+/** Consulta el último release de GitHub (etiqueta v1.2.3). Solo en la app Android; cualquier fallo se ignora. */
 export async function checkUpdate(): Promise<Update | null> {
   if (!Capacitor.isNativePlatform()) return null
   try {
-    const r = await fetch(`${VERSION_URL}?t=${Date.now()}`, { cache: 'no-store' })
+    const r = await fetch(LATEST_URL, { headers: { Accept: 'application/vnd.github+json' } })
     if (!r.ok) return null
-    const j = (await r.json()) as Partial<Update>
-    if (typeof j.version !== 'string' || !isNewer(j.version, APP_VERSION)) return null
-    return { version: j.version, url: typeof j.url === 'string' && j.url.startsWith('https://') ? j.url : APK_URL, notes: j.notes ?? '' }
+    const j = (await r.json()) as { tag_name?: string; body?: string; html_url?: string }
+    const version = (j.tag_name ?? '').replace(/^v/i, '')
+    if (!/^\d+\.\d+\.\d+$/.test(version) || !isNewer(version, APP_VERSION)) return null
+    return { version, url: APK_URL, notes: j.body ?? '' }
   } catch {
     return null
   }
