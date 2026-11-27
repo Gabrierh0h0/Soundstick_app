@@ -28,6 +28,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // Las guías son páginas HTML propias: no deben caer en la app.
+        navigateFallbackDenylist: [/^\/en\//, /^\/como-hacer-/, /^\/sticker-con-/],
         runtimeCaching: [
           {
             // El motor de video pesa ~30 MB: se guarda la primera vez que se usa, no antes.

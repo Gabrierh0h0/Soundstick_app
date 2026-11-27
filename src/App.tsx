@@ -60,6 +60,12 @@ function Shell() {
           <div className="download">
             <a href={APK_URL} download>{t('dlAndroid')}</a>
             <small>{t('dlHint')}</small>
+            <nav className="guides" aria-label="Guías">
+              <a href="/como-hacer-stickers-de-whatsapp-con-sonido/">Cómo hacer stickers de WhatsApp con sonido</a>
+              <a href="/como-hacer-stickers-animados-whatsapp-android/">Stickers animados desde Android</a>
+              <a href="/sticker-con-sonido-whatsapp-no-suena-o-pesa-demasiado/">Mi sticker no suena o pesa demasiado</a>
+              <a href="/en/make-whatsapp-stickers-with-sound-android/" lang="en">English guide</a>
+            </nav>
           </div>
         )}
       </div>

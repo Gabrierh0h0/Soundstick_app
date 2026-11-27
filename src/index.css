@@ -533,3 +533,6 @@ html, body { background: var(--lil); }
 /* Asa: barra y marca exactamente centradas sobre el punto de corte. */
 .trim .handle::before, .trim .handle.start::before, .trim .handle.end::before { left: 50%; right: auto; margin-left: -2.5px; transform: none; }
 .trim .handle::after, .trim .handle.start::after, .trim .handle.end::after { left: 50%; right: auto; margin-left: -1.5px; transform: none; }
+
+.guides { display: grid; gap: 6px; margin-top: 14px; font: 500 16px/1.3 var(--f-ui); }
+.guides a { color: var(--link); }
