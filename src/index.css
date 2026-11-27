@@ -514,3 +514,8 @@ html, body { background: var(--lil); }
 .playhead { background: var(--ink); width: 2px; margin-left: -1px; top: -2px; bottom: -2px; box-shadow: 0 0 0 1px #fff; }
 .tlabels { margin-top: 8px; font: 16px/1 var(--f-term); color: #3a2a66; }
 .tlabels b { font: 16px/1 var(--f-term); padding: 0; background: none; color: var(--ink); }
+
+/* El visor deja pasar el desplazamiento vertical; solo se arrastra el recuadro tras mantener el dedo. */
+.stage { touch-action: pan-y; }
+.cropbox { touch-action: auto; }
+.cropbox.grab { outline: 3px solid var(--yel); outline-offset: 1px; }

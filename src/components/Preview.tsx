@@ -41,6 +41,10 @@ export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRe
   const boxRef = useRef<HTMLDivElement>(null)
   const [dim, setDim] = useState({ w: 354, h: 354 })
   const drag = useRef<Drag | null>(null)
+  const cropRef = useRef<HTMLDivElement>(null)
+  // En pantalla táctil, el recuadro solo se mueve tras mantener el dedo un instante; antes de eso el dedo desplaza la página.
+  const hold = useRef<{ timer: number; x: number; y: number } | null>(null)
+  const [grab, setGrab] = useState(false)
 
   useEffect(() => {
     const el = boxRef.current
@@ -58,13 +62,51 @@ export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRe
   const mediaStyle = { width: width * s, height: height * s, left: ox, top: oy }
   const min = Math.max(16, Math.min(width, height) * MIN_FRAC)
 
+  // Una vez que el recuadro está "agarrado", el navegador no debe tomar el gesto para desplazar la página.
+  useEffect(() => {
+    const el = cropRef.current
+    if (!el) return
+    const block = (e: TouchEvent) => {
+      if (drag.current) e.preventDefault()
+    }
+    el.addEventListener('touchmove', block, { passive: false })
+    return () => el.removeEventListener('touchmove', block)
+  }, [])
+
   const down = (kindOf: Drag['kind']) => (e: PointerEvent<HTMLElement>) => {
     e.stopPropagation()
+    if (kindOf === 'move' && e.pointerType === 'touch') {
+      const x = e.clientX
+      const y = e.clientY
+      const c = crop
+      hold.current = {
+        x,
+        y,
+        timer: window.setTimeout(() => {
+          const pend = hold.current
+          if (!pend) return
+          drag.current = { kind: 'move', x0: pend.x, y0: pend.y, c }
+          setGrab(true)
+          navigator.vibrate?.(12)
+        }, 230),
+      }
+      return
+    }
     e.currentTarget.setPointerCapture(e.pointerId)
     drag.current = { kind: kindOf, x0: e.clientX, y0: e.clientY, c: crop }
   }
 
   const move = (e: PointerEvent<HTMLElement>) => {
+    const pend = hold.current
+    if (pend && !drag.current) {
+      // Si el dedo se mueve antes de agarrar el recuadro, es un desplazamiento de página.
+      if (Math.hypot(e.clientX - pend.x, e.clientY - pend.y) > 8) {
+        window.clearTimeout(pend.timer)
+        hold.current = null
+      } else {
+        return
+      }
+    }
     const d = drag.current
     if (!d) return
     const dx = (e.clientX - d.x0) / s
@@ -98,7 +140,10 @@ export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRe
   }
 
   const up = () => {
+    if (hold.current) window.clearTimeout(hold.current.timer)
+    hold.current = null
     drag.current = null
+    setGrab(false)
   }
 
   const handle = (corner: Corner) => (
@@ -120,7 +165,8 @@ export function Preview({ kind, url, width, height, crop, onCrop, ratio, videoRe
         <img src={url} alt="" draggable={false} style={mediaStyle} />
       )}
       <div
-        className="cropbox"
+        className={`cropbox${grab ? ' grab' : ''}`}
+        ref={cropRef}
         style={{ left: ox + crop.x * s, top: oy + crop.y * s, width: crop.w * s, height: crop.h * s }}
         onPointerDown={down('move')}
         onPointerMove={move}
