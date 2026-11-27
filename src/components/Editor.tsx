@@ -404,7 +404,7 @@ export function Editor({ onHelp }: { onHelp: () => void }) {
       const key = waErrorKey(e)
       console.error('wa-send', e)
       const detail = String((e as { message?: string })?.message ?? e).slice(0, 80)
-      setMessage({ kind: 'error', text: key === 'waErrGeneric' ? `${t(key as Key)} (${detail})` : t(key as Key) })
+      setMessage({ kind: 'error', text: key === 'waErrGeneric' || key === 'waErrBig' ? `${t(key as Key)} (${detail})` : t(key as Key) })
     } finally {
       setPhase('idle')
     }

@@ -77,10 +77,12 @@ export async function exportWaSticker(o: ExportOptions): Promise<WaExport> {
 /** Tope del núcleo (1 000 000 B) menos el margen del bloque EXIF que se agrega después. */
 const WA_MAX_WEBP = 990_000
 /** Intentos de menor a mayor compresión; si nada cabe, se baja también la fluidez (cuadros por segundo). */
-const WA_ATTEMPTS = [
+const WA_ATTEMPTS: { q: number; fps: number; blur?: number }[] = [
   { q: 60, fps: 15 }, { q: 48, fps: 15 }, { q: 38, fps: 15 }, { q: 28, fps: 15 }, { q: 20, fps: 15 },
   { q: 34, fps: 12 }, { q: 24, fps: 12 }, { q: 16, fps: 12 },
-  { q: 24, fps: 10 }, { q: 16, fps: 10 }, { q: 18, fps: 8 }, { q: 10, fps: 8 },
+  { q: 24, fps: 10 }, { q: 16, fps: 10 },
+  // Último recurso: se suaviza un poco el detalle fino (ruido, grano), que es lo que más pesa en un WebP.
+  { q: 20, fps: 8, blur: 0.6 }, { q: 12, fps: 8, blur: 0.8 }, { q: 10, fps: 6, blur: 1 }, { q: 6, fps: 6, blur: 1.3 },
 ]
 /** Avance mostrado por intento: el primero llena casi toda la barra y los reintentos solo la rematan, sin retroceder. */
 const progressOf = (attempt: number, f: number) => {
@@ -224,9 +226,10 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
       const seconds = Math.min(10, Math.max(1, Math.ceil(outLen)))
       let webp: Uint8Array | null = null
       for (let i = 0; i < WA_ATTEMPTS.length; i++) {
-        const { q, fps: f } = WA_ATTEMPTS[i]
+        const { q, fps: f, blur } = WA_ATTEMPTS[i]
         pass = i
-        const graph = f === fps ? chain : chain.map((c) => c.replace(`fps=${fps}`, `fps=${f}`))
+        const soften = blur ? `gblur=sigma=${blur},` : ''
+        const graph = chain.map((c) => c.replace(`,fps=${fps},`, `,${soften}fps=${f},`))
         const c = await ff.exec([
           ...args,
           '-filter_complex', graph.join(';'),
@@ -237,12 +240,13 @@ async function run(o: ExportOptions, wa: boolean): Promise<Blob | WaExport> {
         ], EXEC_TIMEOUT)
         if (c !== 0) throw new Error(`ffmpeg exit ${c}`)
         webp = (await ff.readFile('out.webp')) as Uint8Array
+        console.log(`ff: intento ${i + 1} q${q} ${f}fps${blur ? ' suavizado ' + blur : ''} -> ${Math.round(webp.length / 1024)} KB`)
         if (webp.length <= WA_MAX_WEBP) break
         // Si quedó muy por encima del límite, salta intentos intermedios para no repetir la decodificación en vano.
         const skip = webp.length > WA_MAX_WEBP * 2 ? 2 : webp.length > WA_MAX_WEBP * 1.4 ? 1 : 0
         i = Math.max(i, Math.min(i + skip, WA_ATTEMPTS.length - 2))
       }
-      if (!webp || webp.length > WA_MAX_WEBP) throw new Error('TOO_BIG')
+      if (!webp || webp.length > WA_MAX_WEBP) throw new Error(`TOO_BIG: ${webp ? Math.round(webp.length / 1024) : 0} KB`)
       const opus = (await ff.readFile('out.ogg')) as Uint8Array
       report(1)
       return { webp: webp.slice(), opus: opus.slice(), seconds }
